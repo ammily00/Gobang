@@ -8,11 +8,13 @@ private:
     vector<Stone> stone; // all the stones placed
     int dimension; //n*n board
     void initBoard(); //initialize the board
-    void updateBoard(); //every time places a stone, update the board
+    void placeStone(int, int, char); //place the stone on the board
+
 
 public:
     Board();
     void printBoard(); //show the sequential order of all the stones
+    void updateBoard(); //every time places a stone, update the board
 };
 
 

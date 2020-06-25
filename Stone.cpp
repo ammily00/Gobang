@@ -13,9 +13,3 @@ void Stone::initStone(){
 
 }
 
-/*
- * place a new stone to somewhere
- */
-void Stone::placeStone(int x, int y, char color){
-
-}

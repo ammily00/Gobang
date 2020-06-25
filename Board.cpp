@@ -20,6 +20,14 @@ void Board::updateBoard(){
 
 }
 
+
+/*
+ * place a new stone to somewhere
+ */
+void Board::placeStone(int x, int y, char color){
+
+}
+
 /*
  * print all the stones sequentially
  */

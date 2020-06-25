@@ -10,7 +10,6 @@ private:
     char color; //x for black, o for white
     int index; //sequential number of the stone
     void initStone(); //initialize the stone
-    void placeStone(int, int, char); //place the stone on the board
 
 public:
     Stone();
