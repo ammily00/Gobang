@@ -1,6 +1,6 @@
 #ifndef BOARD_H_
 #define BOARD_H_
-
+#define NOSTONE 999
 class Board {
 public:
     /*
@@ -49,7 +49,7 @@ private:
     /*
      * store stones in a two dimensional array
      */
-    int grid[size][size];
+    int grid[size][size] = NOSTONE;
 };
 
 

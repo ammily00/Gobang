@@ -9,7 +9,7 @@ struct Move{
      * in this form: sequence number:color:x_coordinatey_coordinate
      * ex: 1:B:H5      200:W:A10
      */
-    char cmdSting[10];
+    char cmdString[10];
 
     /*
      * sequence number
