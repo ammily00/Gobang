@@ -27,7 +27,12 @@ public:
      * place a black/white stone to somewhere
      * implement this function after checking the return value of getStone
      */
-    void placeStone(int x, int y, stoneColor color)
+    void placeStone(int x, int y, stoneColor color);
+
+    /*
+     * remove the most previous stone (if someone regrets a stone)
+     */
+    void removeStone(int x, int y, stoneColor color);
 
     /*
      * After clearing the board, replay the game by sequence number
