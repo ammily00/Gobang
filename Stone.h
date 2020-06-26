@@ -6,17 +6,26 @@ typedef enum {
     stoneWhite
 } stoneColor;
 
-class Stone{
+class Stone {
 public:
 
 
 private:
-    int x; //x coordinate
-    int y; //y coordinate
-    char color; //x for black, o for white
-    int index; //sequential number of the stone
 
+    /*
+     * x coordinate
+     */
+    int x;
 
+    /*
+     * y coordinate
+     */
+    int y;
+
+    /*
+     * color of the stone
+     */
+    stoneColor color;
 };
 
 #endif /* STONE_H_ */

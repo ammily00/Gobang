@@ -6,43 +6,33 @@
 class Board {
 public:
     /*
-     * set the size (size*size) of the board
+     * Constructor: take parameter annotation
      */
     Board(int size);
 
     ~Board();
 
     /*
-     * show all the stones on the board
+     * output the board in a displayable way
      */
     void printBoard();
 
     /*
-     * return value true means the intersection is empty and the new stone can be placed
-     * false means there is already a stone on the intersection, the new stone can not be placed
+     * return null pointer if the intersection is empty and the new stone can be placed
+     * return the pointer of Stone means there is already a stone on the intersection, the new stone can not be placed
      */
-    bool getStone(int x, int y); //every time places a stone, update the board
+    Stone * getStone(int x, int y);
 
     /*
      * place a black/white stone to somewhere
-     * implement this function after checking the return value of getStone
+     * if there is no stone in the intersection, first remove it then place stone
      */
-    void placeStone(int x, int y, stoneColor color);
+    void placeStone(Stone & stone);
 
     /*
-     * remove the most previous stone (if someone regrets a stone)
+     * remove a stone
      */
-    void removeStone(int x, int y, stoneColor color);
-
-    /*
-     * After clearing the board, replay the game by sequence number
-     */
-    void replay();
-
-    /*
-     * just clear the performance, remain the contents
-     */
-    void clearBoard();
+    void removeStone(int x, int y);
 
     /*
      * clear the board and prepare for the new game to start (clearing everything)
@@ -51,15 +41,11 @@ public:
 
 
 private:
-    vector<Stone> stone; // all the stones placed
 
     /*
      * the size (size*size) of the board
      */
     int size;
-
-    friend class Game;
-
 };
 
 

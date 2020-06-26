@@ -31,6 +31,16 @@ public:
      * also store the stones in the array (for printBoard)
      */
     void move(int x, int y, stoneColor color);
+
+    /*
+     * After clearing the board, replay the game by sequence number
+     */
+    void replay();
+
+    /*
+     * stack pop (not real sequence) (place stone: push)
+     */
+    void refreshBoard();
 };
 
 private:
