@@ -2,13 +2,10 @@
 #include <iostream>
 using namespace std;
 
-Game::Game(){
-
+Gomoku::Gomoku(){
+    initChessBoard();
 }
 
-Game::~Game(){
-
-}
 
 
 void Gomoku::initChessBoard(){
