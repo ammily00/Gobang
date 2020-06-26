@@ -8,7 +8,8 @@ typedef enum {
 
 class Stone {
 public:
-
+    Stone();
+    ~Stone();
 
 private:
 

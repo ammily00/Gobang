@@ -26,8 +26,9 @@ public:
     /*
      * place a black/white stone to somewhere
      * if there is no stone in the intersection, first remove it then place stone
+     * inside, new Stone
      */
-    void placeStone(Stone & stone);
+    void placeStone(int x, int y, colorStone color);
 
     /*
      * remove a stone
@@ -46,6 +47,11 @@ private:
      * the size (size*size) of the board
      */
     int size;
+
+    /*
+     * store stones in a two dimensional array, the value is its color
+     */
+    int grid[size][size];
 };
 
 

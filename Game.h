@@ -3,10 +3,39 @@
 
 #include <vector>
 
+struct Move{
+    /*
+     * the coordinate, color and sequence number of the stone passed in by the user
+     * in this form: sequence number:color:x coordinate:ycoordinate
+     * ex: 1:B:H:5      200:W:A:10
+     */
+    char cmdSting[12];
+
+    /*
+     * sequence number
+     */
+    int seqNum;
+
+    /*
+     * x coordinate
+     */
+    int x;
+
+    /*
+     * y coordinate
+     */
+    int y;
+
+    /*
+     * stone color
+     */
+    stoneColor color;
+};
+
 class Game {
 public:
     /*
-     * sequence number default to be 0
+     *
      * initialize the array
      */
     Game();
@@ -30,7 +59,9 @@ public:
      * Push this coordinate & stone color into the vector (for replay)
      * also store the stones in the array (for printBoard)
      */
-    void move(int x, int y, stoneColor color);
+    void moveStone(cmdString);
+
+    void tryStone();
 
     /*
      * After clearing the board, replay the game by sequence number
@@ -39,26 +70,21 @@ public:
 
     /*
      * stack pop (not real sequence) (place stone: push)
+     * clear all the try-stones
      */
-    void refreshBoard();
-};
+    void refresh();
 
 private:
 
     /*
-     * sequence number
+     * move number default to be 0
      */
-    int seqNum;
+    int moveNum;
 
     /*
      * store and display stones in sequence order
      */
-    std::vector<Stone> stoneSeq;
-
-    /*
-     * store stones in a two dimensional array, the value is its color
-     */
-    int Stone[size][size];
-
+    std::vector<Move> moves;
+};
 
 #endif /* GAME_H_ */
