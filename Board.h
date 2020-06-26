@@ -1,8 +1,6 @@
 #ifndef BOARD_H_
 #define BOARD_H_
 
-
-
 class Board {
 public:
     /*
@@ -18,8 +16,8 @@ public:
     void printBoard();
 
     /*
-     * return null pointer if the intersection is empty and the new stone can be placed
-     * return the pointer of Stone means there is already a stone on the intersection, the new stone can not be placed
+     * return null pointer if the intersection is empty (so the new stone can be placed)
+     * return the pointer of Stone means there is already a stone on the intersection (so the new stone can not be placed)
      */
     Stone * getStone(int x, int y);
 
@@ -49,7 +47,7 @@ private:
     int size;
 
     /*
-     * store stones in a two dimensional array, the value is its color
+     * store stones in a two dimensional array
      */
     int grid[size][size];
 };

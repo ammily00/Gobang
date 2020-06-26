@@ -6,10 +6,10 @@
 struct Move{
     /*
      * the coordinate, color and sequence number of the stone passed in by the user
-     * in this form: sequence number:color:x coordinate:ycoordinate
-     * ex: 1:B:H:5      200:W:A:10
+     * in this form: sequence number:color:x_coordinatey_coordinate
+     * ex: 1:B:H5      200:W:A10
      */
-    char cmdSting[12];
+    char cmdSting[10];
 
     /*
      * sequence number
@@ -59,9 +59,12 @@ public:
      * Push this coordinate & stone color into the vector (for replay)
      * also store the stones in the array (for printBoard)
      */
-    void moveStone(cmdString);
+    void moveStone(char cmdString[10]);
 
-    void tryStone();
+    /*
+     * beyond the real game, guess where the players will place stones
+     */
+    void tryStone(char cmdString[10]);
 
     /*
      * After clearing the board, replay the game by sequence number
@@ -69,8 +72,15 @@ public:
     void replay();
 
     /*
-     * stack pop (not real sequence) (place stone: push)
+     * stack pop (place stone: push)
+     */
+    void withdrawStone();
+
+    /*
      * clear all the try-stones
+     * implementation:
+     * call Board::reset()
+     * for each moves in Move, call placeStone
      */
     void refresh();
 
@@ -84,7 +94,13 @@ private:
     /*
      * store and display stones in sequence order
      */
-    std::vector<Move> moves;
+    std::vector <Move> moves;
+
+    /*
+     * store stones in sequence order
+     * used for withdrawStone, each time withdraw a stone, pop from the stack
+     */
+    std::stack <Move> withdraw_moves;
 };
 
 #endif /* GAME_H_ */
