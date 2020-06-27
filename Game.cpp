@@ -10,6 +10,51 @@ Game::~Game(){
 
 }
 
+bool Game::checkState(int x, int y, stoneColor color){
+/*
+ * if (grid[x][y] != NOSTONE)
+ *      return false;
+ * for each vector
+ */
+}
+
+void Game::moveStone(char cmdString[10]){
+/*
+ *
+ *
+ */
+}
+
+void Game::tryStone(char cmdString[10]){
+/*
+ *
+ */
+}
+
+void Game::replay(){
+/*
+ *
+ */
+}
+
+void Game::withdrawStone(){
+/*
+ *
+ */
+}
+
+void Game::refresh(){
+/*
+ *
+ */
+}
+
+
+
+
+
+
+
 /*
 void Gomoku::initChessBoard(){
     for (int i = 0; i < N; i++){

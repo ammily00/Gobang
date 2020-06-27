@@ -34,10 +34,7 @@ struct Move{
 
 class Game {
 public:
-    /*
-     *
-     * initialize the array
-     */
+
     Game();
 
     /*
@@ -46,9 +43,14 @@ public:
     ~Game();
 
     /*
+     * split the cmdString into x & y coordinate and stone color
+     */
+    splitString();
+
+    /*
      * check whether the state is correct (one black and one white)
      */
-    bool checkState();
+    bool checkState(int x, int y, stoneColor color);
 
     /*
      * new Stone()
@@ -89,7 +91,7 @@ private:
     /*
      * move number default to be 0
      */
-    int moveNum;
+    int moveNum = 0;
 
     /*
      * store and display stones in sequence order
