@@ -4,7 +4,12 @@
 using namespace std;
 
 Board::Board(int size){
-    size = 15; //could be changed if needed
+/*
+ * size = 15; //could be changed if needed
+ * resetBoard();
+ */
+
+
 }
 
 Board::~Board(){
@@ -56,6 +61,5 @@ void Board::resetBoard(){
  *              grid[i][j] = NOSTONE;
  *          end
  *      end
- *
  */
 }

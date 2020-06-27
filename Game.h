@@ -2,12 +2,13 @@
 #define GAME_H_
 
 #include <vector>
+#include <string>
 
 struct Move{
     /*
      * the coordinate, color and sequence number of the stone passed in by the user
      * in this form: sequence number:color:x_coordinatey_coordinate
-     * ex: 1:B:H5      200:W:A10
+     * ex: 1:B:H:5      200:W:A:10
      */
     char cmdString[10];
 
@@ -43,9 +44,13 @@ public:
     ~Game();
 
     /*
-     * split the cmdString into x & y coordinate and stone color
+     * split the cmdString, return a string vector
+     * vector.at(0) <- sequence number
+     * vector.at(1) <- stone color
+     * vector.at(2) <- x coordinate
+     * vector.at(3) <- y coordinate
      */
-    splitString();
+    vector <char *> splitString();
 
     /*
      * check whether the state is correct (one black and one white)

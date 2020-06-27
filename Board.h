@@ -5,6 +5,7 @@ class Board {
 public:
     /*
      * Constructor: take parameter annotation
+     * initialize the board
      */
     Board(int size);
 
@@ -49,7 +50,7 @@ private:
     /*
      * store stones in a two dimensional array
      */
-    int grid[size][size] = NOSTONE;
+    int grid[size][size];
 };
 
 
