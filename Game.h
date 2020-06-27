@@ -96,12 +96,22 @@ private:
     /*
      * move number default to be 0
      */
-    int moveNum = 0;
+    int moveNum;
+
+    /*
+     * move number of tryStone default to be 0
+     */
+    int tryStoneMoveNum;
 
     /*
      * store and display stones in sequence order
      */
     std::vector <Move> moves;
+
+    /*
+     * store and display tryStones in sequence order
+     */
+    std::vector <Move> tryStoneMoves;
 
     /*
      * store stones in sequence order
