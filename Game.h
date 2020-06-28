@@ -40,17 +40,9 @@ public:
 
     /*
      * delete all the stones and status, end the game
+     * or to say: destroy the Game object including all associates
      */
     ~Game();
-
-    /*
-     * split the cmdString, return a string vector
-     * vector.at(0) <- sequence number
-     * vector.at(1) <- stone color
-     * vector.at(2) <- x coordinate
-     * vector.at(3) <- y coordinate
-     */
-    vector <char *> splitString();
 
     /*
      * check whether the state is correct (one black and one white)
@@ -102,6 +94,15 @@ private:
      * move number of tryStone default to be 0
      */
     int tryStoneMoveNum;
+
+    /*
+     * split the cmdString, return a string vector
+     * vector.at(0) <- sequence number
+     * vector.at(1) <- stone color
+     * vector.at(2) <- x coordinate
+     * vector.at(3) <- y coordinate
+     */
+    vector <char *> splitString(char cmdString[10]);
 
     /*
      * store and display stones in sequence order

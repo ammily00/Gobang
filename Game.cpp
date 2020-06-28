@@ -4,8 +4,10 @@
 using namespace std;
 
 Game::Game(){
-    moveNUm = 0;
-    tryStoneMoveNUm = 0;
+/*
+ * moveNUm = 0;
+ * tryStoneMoveNUm = 0;
+ */
 }
 
 Game::~Game(){

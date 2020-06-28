@@ -12,7 +12,7 @@ public:
     ~Board();
 
     /*
-     * output the board in a displayable way
+     * output the board in a displayable way into the console
      */
     void printBoard();
 
@@ -23,19 +23,19 @@ public:
     Stone * getStone(int x, int y);
 
     /*
-     * place a black/white stone to somewhere
+     * place a black/white stone to the specific coordinate
      * if there is no stone in the intersection, first remove it then place stone
      * inside, new Stone
      */
     void placeStone(int x, int y, colorStone color);
 
     /*
-     * remove a stone
+     * remove a stone at the user specific location
      */
     void removeStone(int x, int y);
 
     /*
-     * clear the board and prepare for the new game to start (clearing everything)
+     * reset the board to the genuine state
      */
     void resetBoard();
 
