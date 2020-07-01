@@ -3,15 +3,14 @@
 
 typedef enum {
     stoneBlack,
-    stoneWhite
+    stoneWhite,
+    NOSTONE
 } stoneColor;
 
 class Stone {
 public:
     Stone();
     ~Stone();
-
-private:
 
     /*
      * x coordinate

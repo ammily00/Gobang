@@ -1,6 +1,7 @@
 #ifndef BOARD_H_
 #define BOARD_H_
-#define NOSTONE 999
+#include "Stone.h"
+
 class Board {
 public:
     /*
@@ -27,7 +28,7 @@ public:
      * if there is no stone in the intersection, first remove it then place stone
      * inside, new Stone
      */
-    void placeStone(int x, int y, colorStone color);
+    void placeStone(int x, int y, stoneColor color);
 
     /*
      * remove a stone at the user specific location
@@ -50,7 +51,7 @@ private:
     /*
      * store stones in a two dimensional array
      */
-    int grid[size][size];
+    Stone **grid;
 };
 
 

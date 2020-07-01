@@ -4,12 +4,17 @@
 using namespace std;
 
 Board::Board(int size){
-    size = 15; //could be changed if needed
+    this->size = size; //size parameter passed in by the user
+    grid = new Stone * [size];
+    for(int i = 0; i < size; i++)
+        grid[i] = new Stone[size];
     resetBoard();
 }
 
 Board::~Board(){
-
+    for(int i = 0; i < size; i++)
+        delete[] grid[i];
+    delete[] grid;
 }
 
 void Board::printBoard(){
@@ -17,15 +22,15 @@ void Board::printBoard(){
         for (int j = 0; j < size; j++){
             //print the index number for rows
             if (j == 0)
-                cout << i+1 << " ";
+                cout << size - i << " ";
 
             //print the stones for different situations
             switch(grid[i][j]){
                 case stoneBlack:
-                    cout << "x ";
+                    cout << "b ";
                     break;
                 case stoneWhite:
-                    cout << "o ";
+                    cout << "w ";
                     break;
                 default:
                     cout << "  ";
@@ -52,10 +57,10 @@ Stone * Board::getStone(int x, int y){
     if (grid[x][y] == NOSTONE)
         return nullptr;
     else{
-            Stone * stone;
-            stone.x = x;
-            stone.y = y;
-            stone.color = grid[x][y];
+            Stone * stone = nullptr;
+            stone->x = x;
+            stone->y = y;
+            stone->color = grid[x][y];
             return stone;
     }
 }
@@ -71,7 +76,7 @@ void Board::removeStone(int x, int y){
 void Board::resetBoard(){
     for (int i = 0; i < size; i++){
         for (int j = 0; j < size; j++){
-            grid[i][j] == NOSTONE;
+            grid[i][j] = NOSTONE;
         }
     }
 }
