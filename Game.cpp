@@ -4,35 +4,48 @@
 using namespace std;
 
 Game::Game(){
-/*
- * moveNUm = 0;
- * tryStoneMoveNUm = 0;
- */
+    moveNUm = 0;
+    tryStoneMoveNUm = 0;
 }
 
 Game::~Game(){
 
 }
 
-vector <char *> Game::splitString(char cmdString[10]){
-/*
- * vector <char *> splVec;
- * if (cmdString == 'pass' || cmdString == 'Pass' || cmdString == 'PASS')
- *      splVec.push_back(nullptr);
- * else{
- *      char * spl;
- *      spl = strtok(cmdString, ":");
- *      while (spl != nullptr){
- *              splVec.push_back(spl);
- *              spl = strtok(nullptr, ":");
- *      }
- * return splIntVec;
- */
-
+Move Game::splitString(char cmdString[8]){
+    vector <char *> splVec;
+    if (cmdString == "Pass")
+        splVec.push_back(nullptr);
+    else {
+        char *spl;
+        spl = strtok(cmdString, ":");
+        while (spl != nullptr) {
+            splVec.push_back(spl);
+            spl = strtok(nullptr, ":");
+        }
+    }
+    
+    Move * movefromSplit = new Move;
+    if (splVec.at(0) != nullptr) {
+        if (splVec.at(0) == "W")
+            movefromSplit.color = stoneWhite;
+        else if (splVec.at(0) == "B")
+            movefromSplit.color = stoneBlack;
+        if (splVec.at(1).at(0) >= 'A' && splVec.at(1).at(0) <= 'Z')
+            movefromSplit.x = splVec.at(1).at(0) - 65;
+        movefromSplit.y = size - stoi(splVec.at(2));
+    }
+    else{
+        movefromSplit = nullptr;
+    }
+    return movefromSplit;
 }
 
 int Game::checkState(Move & moves){
-/*
+
+
+
+    /*
  * if (grid[moves.x][moves.y] != NOSTONE)
  *      return -1;
  * if (moves.seqNum % 2 == 1 && moves.color == stoneBlack)
@@ -45,33 +58,21 @@ int Game::checkState(Move & moves){
  */
 }
 
-void Game::moveStone(char cmdString[10]){
-/*
- * Move * moveAStone = new Move;
- * vector <char *> splVec = splitString(cmdString[10]);
- * if (splVec.at(0) != nullptr){
- *      moveAStone.seqNUm = stoi(splVec.at(0));
- *      if (splVec.at(1) == 'W' || splVec.at(1) == 'w')
- *              moveAStone.color = stoneWhite;
- *      else if (splVec.at(1) == 'B' || splVec.at(1) == 'b')
- *          moveAStone.color = stoneBlack;
- *      if (splVec.at(2) >= 'a' && splVec.at(2) <= 'z')
- *          moveAStone.x = splVec.at(2) - 97;
- *      else if (splVec.at(2) >= 'A' && splVec.at(2) <= 'Z')
- *          moveAStone.x = splVec.at(2) - 65;
- *      moveAStone.y = size - stoi(splVec.at(3));
- *      placeStone(moveAStone.x, moveAStone.y, moveAStone.color);
- *      moveNum++;
- *      moves.push_back(*moveAStone);
- *      withdraw_moves.push(*moveAStone);
- * }
- */
+void Game::moveStone(char cmdString[8]){
+    Move * moveAStone = splitString(cmdString);
+    if (moveAStone!= nullptr){
+        placeStone(moveAStone.x, moveAStone.y, moveAStone.color);
+        moveAStone.seqNum = ++moveNum;
+        moves.push_back(*moveAStone);
+    }
+
+
 }
 
-void Game::tryStone(char cmdString[10]){
+void Game::tryStone(char cmdString[8]){
 /*
  * Move * moveATryStone = new Move;
- * vector <char *> splVec = splitString(cmdString[10]);
+ * vector <char *> splVec = splitString(cmdString[8]);
  * if (splVec.at(0) != nullptr){
  *      moveATryStone.seqNUm = stoi(splVec.at(0));
  *      if (splVec.at(1) == 'W' || splVec.at(1) == 'w')

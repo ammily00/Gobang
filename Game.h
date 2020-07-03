@@ -4,13 +4,24 @@
 #include <vector>
 #include <string>
 
-struct Move{
+typedef enum {
+    gameStart,
+    gameProcess,
+    GameEnd
+} gameStatus;
+
+typedef enum {
+    blackWin,
+    whitteWin
+} winner;
+
+struct Move {
     /*
      * the coordinate, color and sequence number of the stone passed in by the user
-     * in this form: sequence number:color:x_coordinatey_coordinate
-     * ex: 1:B:H:5      200:W:A:10
+     * in this form: color:x_coordinate:y_coordinate
+     * ex: B:H:5      W:A:10
      */
-    char cmdString[10];
+    char cmdString[8];
 
     /*
      * sequence number
@@ -58,12 +69,12 @@ public:
      * Push this coordinate & stone color into the vector (for replay)
      * also store the stones in the array (for printBoard)
      */
-    void moveStone(char cmdString[10]);
+    void moveStone(char cmdString[8]);
 
     /*
      * beyond the real game, guess where the players will place stones
      */
-    void tryStone(char cmdString[10]);
+    void tryStone(char cmdString[8]);
 
     /*
      * After clearing the board, replay the game by sequence number
@@ -96,13 +107,20 @@ private:
     int tryStoneMoveNum;
 
     /*
-     * split the cmdString, return a string vector
-     * vector.at(0) <- sequence number
-     * vector.at(1) <- stone color
-     * vector.at(2) <- x coordinate
-     * vector.at(3) <- y coordinate
+     * status of the game
+     * gameStart: game starts (the initial status, before the first stone is placed on the board)
+     * gameProcess: game processes (from the first stone to the result of the game)
+     * gameEnd: game ends, no more operations
      */
-    vector <char *> splitString(char cmdString[10]);
+    gameStatus status;
+    
+    /*
+     * split the cmdString, return a Move object
+     * vector.at(0) <- stone color
+     * vector.at(1) <- x coordinate
+     * vector.at(2) <- y coordinate
+     */
+    Move splitString(char cmdString[8]);
 
     /*
      * store and display stones in sequence order
@@ -118,7 +136,7 @@ private:
      * store stones in sequence order
      * used for withdrawStone, each time withdraw a stone, pop from the stack
      */
-    std::stack <Move> withdraw_moves;
+    //std::stack <Move> withdraw_moves;
 };
 
 #endif /* GAME_H_ */
