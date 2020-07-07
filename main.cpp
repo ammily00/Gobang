@@ -14,8 +14,7 @@ int main(){
     board.printBoard();
     board.removeStone(4, 2);
     board.printBoard();
-    cout << (board.getStone(1, 1))->x << " "
-         << (board.getStone(1, 1))->y << " "
-         << (board.getStone(1, 1))->color << endl;
+    cout << board.getStone(1, 1) << endl;
+    cout << board.getStone(3, 3) << endl;
     return 0;
 }

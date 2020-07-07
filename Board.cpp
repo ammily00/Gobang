@@ -55,20 +55,19 @@ void Board::printBoard(){
     }
 }
 
-Stone ** Board::getStone(int x, int y){
+bool Board::getStone(int x, int y){
     if (grid[x][y].color == NOSTONE)
-        return nullptr;
+        return false;
     else
-        return grid[x][y];
+        return true;
 }
 
-Stone ** Board::placeStone(int x, int y, stoneColor color){
-    grid[x][y] = color;
-    return grid[x][y];
+void Board::placeStone(int x, int y, stoneColor color){
+    grid[x][y].color = color;
 }
 
 void Board::removeStone(int x, int y){
-    grid[x][y] = NOSTONE;
+    grid[x][y].color = NOSTONE;
 }
 
 void Board::resetBoard(){

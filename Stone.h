@@ -9,8 +9,8 @@ typedef enum {
 
 class Stone {
 public:
-    Stone();
-    ~Stone();
+    //Stone();
+    //~Stone();
 
     /*
      * x coordinate
