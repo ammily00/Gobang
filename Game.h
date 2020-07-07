@@ -12,7 +12,7 @@ typedef enum {
 
 typedef enum {
     blackWin,
-    whitteWin
+    whiteWin
 } winner;
 
 struct Move {

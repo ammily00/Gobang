@@ -1,5 +1,6 @@
 #include "Board.h"
 #include <iostream>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -18,6 +19,7 @@ Board::~Board(){
 }
 
 void Board::printBoard(){
+    system("clear");
     for (int i = 0; i < size; i++){
         for (int j = 0; j < size; j++){
             //print the index number for rows
@@ -25,7 +27,7 @@ void Board::printBoard(){
                 cout << size - i << " ";
 
             //print the stones for different situations
-            switch(grid[i][j]){
+            switch(grid[i][j].color){
                 case stoneBlack:
                     cout << "b ";
                     break;
@@ -53,20 +55,16 @@ void Board::printBoard(){
     }
 }
 
-Stone * Board::getStone(int x, int y){
-    if (grid[x][y] == NOSTONE)
+Stone ** Board::getStone(int x, int y){
+    if (grid[x][y].color == NOSTONE)
         return nullptr;
-    else{
-            Stone * stone = nullptr;
-            stone->x = x;
-            stone->y = y;
-            stone->color = grid[x][y];
-            return stone;
-    }
+    else
+        return grid[x][y];
 }
 
-void Board::placeStone(int x, int y, stoneColor color){
+Stone ** Board::placeStone(int x, int y, stoneColor color){
     grid[x][y] = color;
+    return grid[x][y];
 }
 
 void Board::removeStone(int x, int y){
@@ -76,7 +74,9 @@ void Board::removeStone(int x, int y){
 void Board::resetBoard(){
     for (int i = 0; i < size; i++){
         for (int j = 0; j < size; j++){
-            grid[i][j] = NOSTONE;
+            grid[i][j].x = i;
+            grid[i][j].y = j;
+            grid[i][j].color = NOSTONE;
         }
     }
 }

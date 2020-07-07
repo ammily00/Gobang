@@ -4,15 +4,16 @@
 using namespace std;
 
 Game::Game(){
-    moveNUm = 0;
+    moveNum = 0;
     tryStoneMoveNUm = 0;
 }
 
 Game::~Game(){
-
+    moves.clear();
+    tryStoneMoves.clear();
 }
 
-Move Game::splitString(char cmdString[8]){
+Move * Game::splitString(char cmdString[8]){
     vector <char *> splVec;
     if (cmdString == "Pass")
         splVec.push_back(nullptr);
@@ -28,12 +29,12 @@ Move Game::splitString(char cmdString[8]){
     Move * movefromSplit = new Move;
     if (splVec.at(0) != nullptr) {
         if (splVec.at(0) == "W")
-            movefromSplit.color = stoneWhite;
+            movefromSplit->color = stoneWhite;
         else if (splVec.at(0) == "B")
-            movefromSplit.color = stoneBlack;
+            movefromSplit->color = stoneBlack;
         if (splVec.at(1).at(0) >= 'A' && splVec.at(1).at(0) <= 'Z')
-            movefromSplit.x = splVec.at(1).at(0) - 65;
-        movefromSplit.y = size - stoi(splVec.at(2));
+            movefromSplit->x = splVec.at(1).at(0) - 65;
+        movefromSplit->y = size - stoi(splVec.at(2));
     }
     else{
         movefromSplit = nullptr;
@@ -61,68 +62,59 @@ int Game::checkState(Move & moves){
 void Game::moveStone(char cmdString[8]){
     Move * moveAStone = splitString(cmdString);
     if (moveAStone!= nullptr){
-        placeStone(moveAStone.x, moveAStone.y, moveAStone.color);
-        moveAStone.seqNum = ++moveNum;
+        placeStone(moveAStone->x, moveAStone->y, moveAStone->color);
+        moveAStone->seqNum = ++moveNum;
         moves.push_back(*moveAStone);
     }
-
-
 }
 
 void Game::tryStone(char cmdString[8]){
-/*
- * Move * moveATryStone = new Move;
- * vector <char *> splVec = splitString(cmdString[8]);
- * if (splVec.at(0) != nullptr){
- *      moveATryStone.seqNUm = stoi(splVec.at(0));
- *      if (splVec.at(1) == 'W' || splVec.at(1) == 'w')
- *          moveATryStone.color = stoneWhite;
- *      else if (splVec.at(1) == 'B' || splVec.at(1) == 'b')
- *          moveATryStone.color = stoneBlack;
- *      if (splVec.at(2) >= 'a' && splVec.at(2) <= 'z')
- *          moveATryStone.x = splVec.at(2) - 97;
- *      else if (splVec.at(2) >= 'A' && splVec.at(2) <= 'Z')
- *          moveATryStone.x = splVec.at(2) - 65;
- *      moveATryStone.y = size - stoi(splVec.at(3));
- *      placeStone(moveATryStone.x, moveATryStone.y, moveATryStone.color);
- *      tryStoneMoveNum++;
- *      moves.push_back(*moveATryStone);
- * }
- */
+    Move * moveATryStone = splitString(cmdString);
+    if (moveATryStone!= nullptr){
+        placeStone(moveATryStone->x, moveATryStone->y, moveATryStone->color);
+        moveATryStone->seqNum = ++tryStoneMoveNum;
+        tryStoneMoves.push_back(*moveATryStone);
+    }
 }
 
-void Game::replay(){
-/*
- * resetBoard();
- * In vector Move moves
- *      for each moves
- *          placeStone(moves.x, moves.y, moves.color);
- *          cout grid[][];
- *          sleep(1000);
- *      end
- *
- */
+void Game::replayStone(){
+    resetBoard();
+    for (vector<Move>::iterator it = moves.begin(); it != moves.end(); it++){
+        placeStone(moves.x, moves.y, moves.color);
+        printBoard();
+        sleep(1000);
+    }
+}
+
+void Game::replayTryStone(){
+    refresh();
+    for (vector<Move>::iterator it = tryStoneMoves.begin(); it != tryStoneMoves.end(); it++){
+        placeStone(tryStoneMoves.x, tryStoneMoves.y, tryStoneMoves.color);
+        printBoard();
+        sleep(1000);
+    }
 }
 
 void Game::withdrawStone(){
-/*
- * moveNum must > 0
- * Move recentStone = withdraw_moves.top();
- * remove(recentStone.x, recentStone.y);
- * withdraw_moves.pop();
- * moves.pop_back();
- * moveNum--;
- */
+    Move recentStone = moves.back();
+    remove(recentStone.x, recentStone.y);
+    moves.pop_back();
+    moveNum--;
+}
+
+void Game::withdrawTryStone(){
+    Move recentTryStone = tryStoneMoves.back();
+    remove(recentTryStone.x, recentTryStone.y);
+    tryStoneMoves.pop_back();
+    tryStoneMoveNum--;
 }
 
 void Game::refresh(){
-/*
- * resetBoard();
- * in vector Move moves
- *      for each moves
- *          placeStone(moves.x, moves.y, moves.color);
- *      end
- */
+    resetBoard();
+    for (vector<Move>::iterator it = moves.begin(); it != moves.end(); it++){
+        placeStone(moves.x, moves.y, moves.color);
+    }
+    printBoard();
 }
 
 
