@@ -12,17 +12,24 @@ typedef enum {
 
 typedef enum {
     blackWin,
-    whiteWin
+    whiteWin,
+    equalWin
 } winner;
 
 struct Move {
     /*
-     * the coordinate, color and sequence number of the stone passed in by the user
-     * in this form: color:x_coordinate:y_coordinate
-     * ex: B:H:5      W:A:10
+     * the coordinate and color of the stone passed in by the user
+     * in this form: color x_coordinate y_coordinate
+     * ex: BH5      WA10
      */
-    char cmdString[8];
+    char cmdString[4];
 
+    /*
+     * the record of each step
+     * in this form: sequence number:color:x_coordinate:y_coordinate or sequence number:Pass
+     * ex: 1:B:H:5      2:W:A:10    3:Pass
+     */
+    char stoneRecord[10];
     /*
      * sequence number
      */

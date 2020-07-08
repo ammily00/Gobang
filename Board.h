@@ -40,6 +40,11 @@ public:
      */
     void resetBoard();
 
+    /*
+     * class Game can access public members of class Board
+     */
+    friend class Game;
+
 
 private:
 

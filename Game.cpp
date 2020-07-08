@@ -13,33 +13,99 @@ Game::~Game(){
     tryStoneMoves.clear();
 }
 
-Move * Game::splitString(char cmdString[8]){
-    vector <char *> splVec;
+Move Game::splitString(char cmdString[4]){
+    Move splitCmdString;
     if (cmdString == "Pass")
-        splVec.push_back(nullptr);
-    else {
-        char *spl;
-        spl = strtok(cmdString, ":");
-        while (spl != nullptr) {
-            splVec.push_back(spl);
-            spl = strtok(nullptr, ":");
+        splitCmdString = 0;
+    else{
+        //color is black or white
+        if (cmdString[0] == "B")
+            splitCmdString.color = stoneBlack;
+        else if (cmdString[0] == "W")
+            splitCmdString.color = stoneWhite;
+
+        // y coordinate is from A to Z (convert back to 0~size-1)
+        if (cmdString[1] >= 'A' && cmdString[1] <= 'Z')
+            splitCmdString.y = cmdString[1] - 65;
+
+        // convert x coordinate from size~1 to 0~size-1
+        if (cmdString[3] == '\0')
+            splitCmdString.x = size - cmdString[2] + 48;
+        else if (cmdString[4] == '\0')
+            splitCmdString.x = size - (cmdString[2] - 48) * 10 - (cmdString[3] - 48);
+    }
+    return splitCmdString;
+}
+
+Move Game::combineString(Move & moves){
+    if (moves.cmdString == "Pass")
+        moves.stoneRecord = moves.cmdString;
+    else{
+        if (seqNumber < 10){
+            // sequence number
+            moves.stoneRecord[0] = to_string(seqNumber);
+            // ":"
+            moves.stoneRecord[1] = ":";
+            //color
+            moves.stoneRecord[2] = moves.cmdString[0];
+            // ":"
+            moves.stoneRecord[3] = ":";
+            // y coordinate
+            moves.stoneRecord[4] = moves.cmdString[1];
+            // ":"
+            moves.stoneRecord[5] = ":";
+            // x coordinate
+            moves.stoneRecord[6] = moves.cmdString[2];
+            moves.stoneRecord[7] = moves.cmdString[3];
+        }
+        else if (seqNum >= 10 && seqNum < 100){
+            // sequence number
+            moves.stoneRecord[0] = to_string(seqNumber / 10);
+            moves.stoneRecord[1] = to_string(seqNumber % 10);
+            // ":"
+            moves.stoneRecord[2] = ":";
+            //color
+            moves.stoneRecord[3] = moves.cmdString[0];
+            // ":"
+            moves.stoneRecord[4] = ":";
+            // y coordinate
+            moves.stoneRecord[5] = moves.cmdString[1];
+            // ":"
+            moves.stoneRecord[6] = ":";
+            // x coordinate
+            moves.stoneRecord[7] = moves.cmdString[2];
+            moves.stoneRecord[8] = moves.cmdString[3];
+        }
+        else if (seqNum >= 100 && seqNum < 1000){
+            // sequence number
+            moves.stoneRecord[0] = to_string(seqNumber / 100);
+            moves.stoneRecord[1] = to_string(seqNumber % 100 / 10);
+            moves.stoneRecord[2] = to_string(seqNumber % 10);
+            // ":"
+            moves.stoneRecord[3] = ":";
+            //color
+            moves.stoneRecord[4] = moves.cmdString[0];
+            // ":"
+            moves.stoneRecord[5] = ":";
+            // y coordinate
+            moves.stoneRecord[6] = moves.cmdString[1];
+            // ":"
+            moves.stoneRecord[7] = ":";
+            // x coordinate
+            moves.stoneRecord[8] = moves.cmdString[2];
+            moves.stoneRecord[9] = moves.cmdString[3];
         }
     }
-    
-    Move * movefromSplit = new Move;
-    if (splVec.at(0) != nullptr) {
-        if (splVec.at(0) == "W")
-            movefromSplit->color = stoneWhite;
-        else if (splVec.at(0) == "B")
-            movefromSplit->color = stoneBlack;
-        if (splVec.at(1).at(0) >= 'A' && splVec.at(1).at(0) <= 'Z')
-            movefromSplit->x = splVec.at(1).at(0) - 65;
-        movefromSplit->y = size - stoi(splVec.at(2));
-    }
-    else{
-        movefromSplit = nullptr;
-    }
-    return movefromSplit;
+}
+
+bool Game::validMove(Move & moves){
+    if (moves.cmdString == "Pass")
+        return true;
+    if (moves.seqNum % 2 == 1 && moves.color == stoneBlack)
+        return true;
+    else if (moves.seqNum % 2 == 0 && moves.color == stoneWhite)
+        return true;
+    return false;
 }
 
 int Game::checkState(Move & moves){
@@ -60,20 +126,20 @@ int Game::checkState(Move & moves){
 }
 
 void Game::moveStone(char cmdString[8]){
-    Move * moveAStone = splitString(cmdString);
-    if (moveAStone!= nullptr){
-        placeStone(moveAStone->x, moveAStone->y, moveAStone->color);
-        moveAStone->seqNum = ++moveNum;
-        moves.push_back(*moveAStone);
+    Move moveAStone = splitString(cmdString);
+    if (moveAStone!= 0){
+        placeStone(moveAStone.x, moveAStone.y, moveAStone.color);
+        moveAStone.seqNum = ++moveNum;
+        moves.push_back(moveAStone);
     }
 }
 
 void Game::tryStone(char cmdString[8]){
-    Move * moveATryStone = splitString(cmdString);
-    if (moveATryStone!= nullptr){
+    Move moveATryStone = splitString(cmdString);
+    if (moveATryStone!= 0){
         placeStone(moveATryStone->x, moveATryStone->y, moveATryStone->color);
         moveATryStone->seqNum = ++tryStoneMoveNum;
-        tryStoneMoves.push_back(*moveATryStone);
+        tryStoneMoves.push_back(moveATryStone);
     }
 }
 
@@ -117,7 +183,13 @@ void Game::refresh(){
     printBoard();
 }
 
+int Game::checkVictory(){
 
+    return blackWin;
+    return whiteWin;
+
+    return equalWin;
+}
 
 
 
