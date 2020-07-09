@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <string>
+#include "Board.h"
+#include "Move.h"
 
 typedef enum {
     gameStart,
@@ -16,40 +18,6 @@ typedef enum {
     equalWin
 } winner;
 
-struct Move {
-    /*
-     * the coordinate and color of the stone passed in by the user
-     * in this form: color x_coordinate y_coordinate
-     * ex: BH5      WA10
-     */
-    char cmdString[4];
-
-    /*
-     * the record of each step
-     * in this form: sequence number:color:x_coordinate:y_coordinate or sequence number:Pass
-     * ex: 1:B:H:5      2:W:A:10    3:Pass
-     */
-    char stoneRecord[10];
-    /*
-     * sequence number
-     */
-    int seqNum;
-
-    /*
-     * x coordinate
-     */
-    int x;
-
-    /*
-     * y coordinate
-     */
-    int y;
-
-    /*
-     * stone color
-     */
-    stoneColor color;
-};
 
 class Game {
 public:
@@ -62,10 +30,19 @@ public:
      */
     ~Game();
 
+//    /*
+//     * check whether the state is correct (one black and one white)
+//     */
+//    bool checkState(int x, int y, stoneColor color);
+
     /*
-     * check whether the state is correct (one black and one white)
+     * check if the input command string is valid
+     * two situations
+     * 1. P for pass (no stone is placed)
+     * 2. place a stone
+     * every digit has its own meaning and requirements
      */
-    bool checkState(int x, int y, stoneColor color);
+    bool validCmdString(char cmdString[4]);
 
     /*
      * new Stone()
@@ -76,22 +53,32 @@ public:
      * Push this coordinate & stone color into the vector (for replay)
      * also store the stones in the array (for printBoard)
      */
-    void moveStone(char cmdString[8]);
+    void moveStone(char cmdString[4]);
 
     /*
      * beyond the real game, guess where the players will place stones
      */
-    void tryStone(char cmdString[8]);
+    void tryStone(char cmdString[4]);
 
     /*
      * After clearing the board, replay the game by sequence number
      */
-    void replay();
+    void replayStone();
 
     /*
-     * stack pop (place stone: push)
+     * After moving all the tryStones and keep the original stones, replay the tryStones be sequence number
+     */
+    void replayTryStone();
+
+    /*
+     * Every time call this function, withdraw the most recent stone
      */
     void withdrawStone();
+
+    /*
+     * Every time call this function, withdraw the most recent trystone
+     */
+    void withdrawTryStone();
 
     /*
      * clear all the try-stones
@@ -101,7 +88,23 @@ public:
      */
     void refresh();
 
+    /*
+     * rules to judge the winner
+     */
+    int checkVictory();
+
+    /*
+     * print the board and the stones
+     */
+    void printGame();
+
 private:
+    /*
+     * use Board object
+     */
+    Board board;
+
+    int size;
 
     /*
      * move number default to be 0
@@ -120,14 +123,19 @@ private:
      * gameEnd: game ends, no more operations
      */
     gameStatus status;
-    
+
     /*
-     * split the cmdString, return a Move object
-     * vector.at(0) <- stone color
-     * vector.at(1) <- x coordinate
-     * vector.at(2) <- y coordinate
+     * split the cmdString
+     * return a nullptr if no stone is placed (P for pass)
+     * return a Move object pointer if a stone is placed
      */
-    Move splitString(char cmdString[8]);
+    Move * splitString(char cmdString[4]);
+
+    /*
+     * combine the sequence nnumber and the command string passed in
+     * to be saved for the record
+     */
+    void combineString(Move & moves);
 
     /*
      * store and display stones in sequence order

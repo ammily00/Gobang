@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Board.h"
-
+#include "Game.h"
 
 using namespace std;
 
@@ -19,9 +19,16 @@ int main(){
 //    return 0;
 
     Game game;
-    char commandString[8];
+    char commandString[4];
     cin >> commandString;
-    if ((commandString[0] == 'B' || commandString[0] == 'W') &&
-         commandString[1] == ":" &&)
+    while (!game.validCmdString(commandString)){
+        cout << "\nwrong string, please input again" << endl;
+        cin >> commandString;
+        if (game.validCmdString(commandString))
+            break;
+    }
+    game.moveStone(commandString);
+    game.printGame();
 
+    return 0;
 }

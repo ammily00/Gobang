@@ -35,7 +35,7 @@ void Board::printBoard(){
                     cout << "w ";
                     break;
                 default:
-                    cout << "  ";
+                    cout << "· ";
                     break;
             }
 
