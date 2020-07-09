@@ -22,7 +22,7 @@ typedef enum {
 class Game {
 public:
 
-    Game();
+    Game(int size);
 
     /*
      * delete all the stones and status, end the game
@@ -140,12 +140,12 @@ private:
     /*
      * store and display stones in sequence order
      */
-    std::vector <Move> moves;
+    std::vector <Move *> moves;
 
     /*
      * store and display tryStones in sequence order
      */
-    std::vector <Move> tryStoneMoves;
+    std::vector <Move *> tryStoneMoves;
 
     /*
      * store stones in sequence order

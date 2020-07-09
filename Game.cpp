@@ -162,7 +162,7 @@ void Game::moveStone(char cmdString[4]){
     if (moveAStone!= 0){
         board.placeStone(moveAStone->x, moveAStone->y, moveAStone->color);
         moveAStone->seqNum = ++moveNum;
-        moves.push_back(*moveAStone);
+        moves.push_back(moveAStone);
     }
 }
 
@@ -171,14 +171,14 @@ void Game::tryStone(char cmdString[4]){
     if (moveATryStone!= 0){
         board.placeStone(moveATryStone->x, moveATryStone->y, moveATryStone->color);
         moveATryStone->seqNum = ++tryStoneMoveNum;
-        tryStoneMoves.push_back(*moveATryStone);
+        tryStoneMoves.push_back(moveATryStone);
     }
 }
 
 void Game::replayStone(){
-    resetBoard();
-    for (vector<Move>::iterator it = moves.begin(); it != moves.end(); it++){
-        placeStone(moves.x, moves.y, moves.color);
+    board.resetBoard();
+    for (vector<Move *>::iterator it = moves.begin(); it != moves.end(); it++){
+        placeStone(moves->x, moves->y, moves->color);
         printBoard();
         sleep(1000);
     }
@@ -186,8 +186,8 @@ void Game::replayStone(){
 
 void Game::replayTryStone(){
     refresh();
-    for (vector<Move>::iterator it = tryStoneMoves.begin(); it != tryStoneMoves.end(); it++){
-        placeStone(tryStoneMoves.x, tryStoneMoves.y, tryStoneMoves.color);
+    for (vector<Move *>::iterator it = tryStoneMoves.begin(); it != tryStoneMoves.end(); it++){
+        placeStone(tryStoneMoves->x, tryStoneMoves->y, tryStoneMoves->color);
         printBoard();
         sleep(1000);
     }
@@ -210,7 +210,7 @@ void Game::withdrawTryStone(){
 void Game::refresh(){
     resetBoard();
     for (vector<Move>::iterator it = moves.begin(); it != moves.end(); it++){
-        placeStone(moves.x, moves.y, moves.color);
+        board.placeStone(moves.x, moves.y, moves.color);
     }
     printBoard();
 }

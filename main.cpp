@@ -18,7 +18,7 @@ int main(){
 //    cout << board.getStone(3, 3) << endl;
 //    return 0;
 
-    Game game;
+    Game game(11);
     char commandString[4];
     cin >> commandString;
     while (!game.validCmdString(commandString)){

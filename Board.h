@@ -21,7 +21,7 @@ public:
      * return null pointer if the intersection is empty (so the new stone can be placed)
      * return the pointer of Stone means there is already a stone on the intersection (so the new stone can not be placed)
      */
-    bool getStone(int x, int y);
+    Stone * getStone(int x, int y);
 
     /*
      * place a black/white stone to the specific coordinate

@@ -55,11 +55,11 @@ void Board::printBoard(){
     }
 }
 
-bool Board::getStone(int x, int y){
+Stone * Board::getStone(int x, int y){
     if (grid[x][y].color == NOSTONE)
-        return false;
+        return nullptr;
     else
-        return true;
+        return * grid;
 }
 
 void Board::placeStone(int x, int y, stoneColor color){
