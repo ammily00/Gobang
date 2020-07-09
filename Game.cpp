@@ -11,8 +11,8 @@ Game::Game(int size): board(size){
 }
 
 Game::~Game(){
-    moves->clear();
-    tryStoneMoves->clear();
+    moves.clear();
+    tryStoneMoves.clear();
 }
 
 bool Game::validCmdString(char cmdString[4]){
@@ -162,7 +162,7 @@ void Game::moveStone(char cmdString[4]){
     if (moveAStone!= 0){
         board.placeStone(moveAStone->x, moveAStone->y, moveAStone->color);
         moveAStone->seqNum = ++moveNum;
-        moves->push_back(moveAStone);
+        moves.push_back(*moveAStone);
     }
 }
 
@@ -171,14 +171,14 @@ void Game::tryStone(char cmdString[4]){
     if (moveATryStone!= 0){
         board.placeStone(moveATryStone->x, moveATryStone->y, moveATryStone->color);
         moveATryStone->seqNum = ++tryStoneMoveNum;
-        tryStoneMoves->push_back(moveATryStone);
+        tryStoneMoves.push_back(*moveATryStone);
     }
 }
 
 void Game::replayStone(){
     board.resetBoard();
-    for (vector<Move>::iterator it = moves->begin(); it != moves->end(); it++){
-        board.placeStone(moves->x, moves->y, moves->color);
+    for (vector<Move>::iterator it = moves.begin(); it != moves.end(); it++){
+        board.placeStone(it->x, it->y, it->color);
         board.printBoard();
         sleep(1000);
     }
@@ -186,31 +186,31 @@ void Game::replayStone(){
 
 void Game::replayTryStone(){
     refresh();
-    for (vector<Move>::iterator it = tryStoneMoves->begin(); it != tryStoneMoves->end(); it++){
-        board.placeStone(tryStoneMoves->x, tryStoneMoves->y, tryStoneMoves->color);
+    for (vector<Move>::iterator it = tryStoneMoves.begin(); it != tryStoneMoves.end(); it++){
+        board.placeStone(it->x, it->y, it->color);
         board.printBoard();
         sleep(1000);
     }
 }
 
 void Game::withdrawStone(){
-    Move * recentStone = moves->back();
-    remove(recentStone->x, recentStone->y);
-    moves->pop_back();
+    Move * recentStone = &(moves.back());
+    board.removeStone(recentStone->x, recentStone->y);
+    moves.pop_back();
     moveNum--;
 }
 
 void Game::withdrawTryStone(){
-    Move * recentTryStone = tryStoneMoves->back();
-    remove(recentTryStone->x, recentTryStone->y);
-    tryStoneMoves->pop_back();
+    Move * recentTryStone = &(tryStoneMoves.back());
+    board.removeStone(recentTryStone->x, recentTryStone->y);
+    tryStoneMoves.pop_back();
     tryStoneMoveNum--;
 }
 
 void Game::refresh(){
     board.resetBoard();
-    for (vector<Move>::iterator it = moves->begin(); it != moves->end(); it++){
-        board.placeStone(moves->x, moves->y, moves->color);
+    for (vector<Move>::iterator it = moves.begin(); it != moves.end(); it++){
+        board.placeStone(it->x, it->y, it->color);
     }
     board.printBoard();
 }

@@ -23,8 +23,18 @@ void Board::printBoard(){
     for (int i = 0; i < size; i++){
         for (int j = 0; j < size; j++){
             //print the index number for rows
-            if (j == 0)
-                cout << size - i << " ";
+            if (j == 0){
+                if (size < 10){
+                    cout << size - i << " ";
+                }
+                else{
+                    if (i > size - 10)
+                        cout << size - i << "  ";
+                    else
+                        cout << size - i << " ";
+                }
+            }
+
 
             //print the stones for different situations
             switch(grid[i][j].color){
@@ -47,8 +57,13 @@ void Board::printBoard(){
 
     //print the index number for columns
     for (char k = 'A'; k < 'A' + size; k++){
-        if (k == 'A')
-            cout << "  ";
+        if (k == 'A'){
+            if (size < 10)
+                cout << "  ";
+            else
+                cout << "   ";
+        }
+
         cout << k << " ";
         if (k == 'A' + size - 1)
             cout << endl;
