@@ -163,6 +163,7 @@ void Game::moveStone(char cmdString[4]){
         board.placeStone(moveAStone->x, moveAStone->y, moveAStone->color);
         moveAStone->seqNum = ++moveNum;
         moves.push_back(*moveAStone);
+        cout << "!!!" << moveAStone->x << moveAStone->y << moveAStone->color << moveAStone->seqNum << endl;
     }
 }
 
@@ -175,12 +176,23 @@ void Game::tryStone(char cmdString[4]){
     }
 }
 
+int Game::getTime(){
+    return clock()/CLOCKS_PER_SEC;
+}
+
 void Game::replayStone(){
-    board.resetBoard();
-    for (vector<Move>::iterator it = moves.begin(); it != moves.end(); it++){
-        board.placeStone(it->x, it->y, it->color);
-        board.printBoard();
-        sleep(1000);
+    int lastTime = 0;
+    while (1) {
+        int now = getTime();
+        if (now - lastTime > 0) {
+            board.resetBoard();
+            board.printBoard();
+            for (vector<Move>::iterator it = moves.begin(); it != moves.end(); it++){
+                board.placeStone(it->x, it->y, it->color);
+                board.printBoard();
+            }
+            lastTime = now;
+        }
     }
 }
 
@@ -195,7 +207,9 @@ void Game::replayTryStone(){
 
 void Game::withdrawStone(){
     Move * recentStone = &(moves.back());
+    cout << "~~~" << recentStone->x << recentStone->y << recentStone->color << endl;
     board.removeStone(recentStone->x, recentStone->y);
+    cout << "..." << recentStone->x << recentStone->y << recentStone->color << endl;
     moves.pop_back();
     moveNum--;
 }
@@ -225,4 +239,8 @@ int Game::checkVictory(){
 
 void Game::printGame(){
     board.printBoard();
+}
+
+int Game::getMoveNum(){
+    return moveNum;
 }

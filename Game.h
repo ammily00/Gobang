@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <ctime>
 #include "Board.h"
 #include "Move.h"
 
@@ -49,7 +50,7 @@ public:
      * Pass in the coordinate and color of the stone by the user input
      * Every time call move, increase the sequence number by 1
      * Call Stone:: getStone to check whether there is a stone in somewhere
-     * If there are is no stone here, call Stone::placeStone to place the stone
+     * If there is no stone here, call Stone::placeStone to place the stone
      * Push this coordinate & stone color into the vector (for replay)
      * also store the stones in the array (for printBoard)
      */
@@ -98,6 +99,8 @@ public:
      */
     void printGame();
 
+    int getMoveNum();
+
 private:
     /*
      * use Board object
@@ -136,6 +139,8 @@ private:
      * to be saved for the record
      */
     void combineString(Move & moves);
+
+    int getTime();
 
     /*
      * store and display stones in sequence order
