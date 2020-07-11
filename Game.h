@@ -142,8 +142,6 @@ private:
      */
     Move * combineString(Move & moves);
 
-    int getTime();
-
     /*
      * store and display stones in sequence order
      */

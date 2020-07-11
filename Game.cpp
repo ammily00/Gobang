@@ -201,23 +201,14 @@ void Game::tryStone(char cmdString[4]){
     }
 }
 
-int Game::getTime(){
-    return clock()/CLOCKS_PER_SEC;
-}
-
 void Game::replayStone(){
-    int lastTime = 0;
-    while (1) {
-        int now = getTime();
-        if (now - lastTime > 0) {
-            board.resetBoard();
-            board.printBoard();
-            for (vector<Move>::iterator it = moves.begin(); it != moves.end(); it++){
-                board.placeStone(it->x, it->y, it->color);
-                board.printBoard();
-            }
-            lastTime = now;
-        }
+    board.resetBoard();
+    board.printBoard();
+    for (vector<Move>::iterator it = moves.begin(); it != moves.end(); it++){
+        board.placeStone(it->x, it->y, it->color);
+        board.printBoard();
+        cout << it->x << it->y << it->color << endl;
+        sleep(2000);
     }
 }
 
