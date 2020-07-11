@@ -80,7 +80,7 @@ Stone * Board::getStone(int x, int y){
     if (grid[x][y].color == NOSTONE)
         return nullptr;
     else
-        return * grid;
+        return * (grid + x) + y;
 }
 
 void Board::placeStone(int x, int y, stoneColor color){

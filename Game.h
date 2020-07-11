@@ -101,6 +101,8 @@ public:
 
     int getMoveNum();
 
+    void displayRecord();
+
 private:
     /*
      * use Board object
@@ -138,7 +140,7 @@ private:
      * combine the sequence nnumber and the command string passed in
      * to be saved for the record
      */
-    void combineString(Move & moves);
+    Move * combineString(Move & moves);
 
     int getTime();
 

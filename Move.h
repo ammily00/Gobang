@@ -24,22 +24,22 @@ public:
     /*
      * sequence number
      */
-    int seqNum;
+    int seqNum = 0;
 
     /*
      * x coordinate
      */
-    int x;
+    int x = -1;
 
     /*
      * y coordinate
      */
-    int y;
+    int y = -1;
 
     /*
      * stone color
      */
-    stoneColor color;
+    stoneColor color = NOSTONE;
 };
 
 #endif /* MOVE_H_ */
