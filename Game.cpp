@@ -1,7 +1,7 @@
 #include "Game.h"
 #include <iostream>
 #include <string>
-#include <unistd.h>
+#include <time.h>
 using namespace std;
 
 Game::Game(int size): board(size){
@@ -206,19 +206,38 @@ void Game::replayStone(){
     board.printBoard();
     for (vector<Move>::iterator it = moves.begin(); it != moves.end(); it++){
         board.placeStone(it->x, it->y, it->color);
-        board.printBoard();
-        cout << it->x << it->y << it->color << endl;
-        sleep(2000);
+
+        time_t start;
+        start = time(0);
+        while(1){
+            if(time(0) - start == 1) {//print every one second
+                board.printBoard();
+                //cout << it->x << it->y << it->color << endl;
+                start = start + 1;
+                break;
+            }
+        }
     }
+    cout << endl;
 }
 
 void Game::replayTryStone(){
     refresh();
     for (vector<Move>::iterator it = tryStoneMoves.begin(); it != tryStoneMoves.end(); it++){
         board.placeStone(it->x, it->y, it->color);
-        board.printBoard();
-        sleep(1000);
+
+        time_t start;
+        start = time(0);
+        while(1){
+            if(time(0) - start == 1) {//print every one second
+                board.printBoard();
+                //cout << it->x << it->y << it->color << endl;
+                start = start + 1;
+                break;
+            }
+        }
     }
+    cout << endl;
 }
 
 void Game::withdrawStone(){
