@@ -35,11 +35,13 @@ bool Game::validCmdString(char cmdString[4]){
          * one-digit number, 1-9 for the units digit (1-9 for cmdString[2] and '\0' for cmdString[3]);
          * two-digit number, 1-9 for the tens digit and 0-9 for the units digit
          * also the range should be within the size
+         * make sure black stone first and white stone later
          */
         if ((cmdString[0] == 'B' || cmdString[0] == 'W') &&
             (cmdString[1] >= 'A' && cmdString[1] <= 'Z') &&
             (cmdString[2] >= 49 && cmdString[2] <= 57) &&
-            (cmdString[3] == '\0' || (cmdString[3] >= 48 && cmdString[3] <= 57))){
+            (cmdString[3] == '\0' || (cmdString[3] >= 48 && cmdString[3] <= 57)) &&
+            ((moveNum % 2 == 0 && cmdString[0] == 'B') || (moveNum % 2 == 1 && cmdString[0] == 'W'))){
                 if (size < 10 && cmdString[1] <= 'A' + size - 1 && cmdString[3] == '\0')
                     return true;
                 else if (size >= 10 && stoi(s) <= size)
@@ -161,8 +163,8 @@ void Game::displayRecord(){
 }
 
 //bool Game::validMove(Move & moves){
-//    if (moves.cmdString[0] == 'P' && moves.cmdString[1] == '\0' &&
-//        moves.cmdString[2] == '\0' && moves.cmdString[3] == '\0')
+//    if ((moves.cmdString[0] == 'B' || moves.cmdString[0] == 'W')  &&
+//         moves.cmdString[1] == 'P' && moves.cmdString[2] == '\0' && moves.cmdString[3] == '\0')
 //        return true;
 //    if (moves.seqNum % 2 == 1 && moves.color == stoneBlack)
 //        return true;
@@ -209,11 +211,12 @@ void Game::replayStone(){
 
         time_t start;
         start = time(0);
+        int n = 1; //1 second
         while(1){
-            if(time(0) - start == 1) {//print every one second
+            if(time(0) - start == n) {//print every n second(s)
                 board.printBoard();
                 //cout << it->x << it->y << it->color << endl;
-                start = start + 1;
+                start = start + n;
                 break;
             }
         }
@@ -228,11 +231,12 @@ void Game::replayTryStone(){
 
         time_t start;
         start = time(0);
+        int n = 1; //1 second
         while(1){
-            if(time(0) - start == 1) {//print every one second
+            if(time(0) - start == n) {//print every n second(s)
                 board.printBoard();
                 //cout << it->x << it->y << it->color << endl;
-                start = start + 1;
+                start = start + n;
                 break;
             }
         }

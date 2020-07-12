@@ -49,11 +49,11 @@ int main(){
                 "3. place a try-stone  4. withdraw a try-stone" << endl;
         cout << "5. print the board  6. replay game  7. replay try-game  "
                 "8. refresh the board (Type number directly like 1, 2, or 3)" << endl;
-        cout << "9. display stone record " << endl;
-        // make sure modeNum is an integer in range [1, 9]
+        cout << "9. display stone record  10. exit" << endl;
+        // make sure modeNum is an integer in range [1, 10]
         string modeNum;
         cin >> modeNum;
-        if(!check_number(modeNum) || stoi(modeNum) < 1 || stoi(modeNum) > 9) {
+        if(!check_number(modeNum) || stoi(modeNum) < 1 || stoi(modeNum) > 10) {
             cout << "wrong number, please select again." << endl;
             continue;
         }
@@ -61,6 +61,7 @@ int main(){
         switch (stoi(modeNum)){
             case 1: //place a stone
                 cout << "Please enter the intersection where you want to place the stone." << endl;
+                cout << "Black stones must be placed first." << endl;
                 cout << "Stones must be in this format: " << endl;
                 cout << "color(B for black, W for white)y coordinate(starting from A to A + size - 1)x coordinate(size~1)" << endl;
                 cout << "All the letters must be capital" << endl;
@@ -101,16 +102,12 @@ int main(){
             case 9:
                 game.displayRecord();
                 break;
+            case 10:
+                exit(0);
             default:
                 break;
         }
     }
-
-
-
-
-
-
     return 0;
 
 }
