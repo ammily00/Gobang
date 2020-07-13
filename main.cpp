@@ -45,16 +45,22 @@ int main(){
     game.printGame();
 
     while(1){
-        cout << "Please select the number: 1. place a stone  2. withdraw a stone  "
-                "3. place a try-stone  4. withdraw a try-stone" << endl;
-        cout << "5. print the board  6. replay game  7. replay try-game  "
-                "8. refresh the board (Type number directly like 1, 2, or 3)" << endl;
-        cout << "9. display stone record  10. exit" << endl;
+        cout << "Please select the number: (Type number directly like 1, 2, or 3)" << endl;
+        cout << "1. place a stone" << endl;
+        cout << "2. withdraw a stone" << endl;
+        cout << "3. place a try-stone" << endl;
+        cout << "4. withdraw a try-stone" << endl;
+        cout << "5. print the board" << endl;
+        cout << "6. replay game" << endl;
+        cout << "7. replay try-game" << endl;
+        cout << "8. refresh the board" << endl;
+        cout << "9. display stone record" << endl;
+        cout << "10. exit" << endl;
         // make sure modeNum is an integer in range [1, 10]
         string modeNum;
         cin >> modeNum;
         if(!check_number(modeNum) || stoi(modeNum) < 1 || stoi(modeNum) > 10) {
-            cout << "wrong number, please select again." << endl;
+            cout << "\nwrong number, please select again." << endl;
             continue;
         }
 
@@ -78,12 +84,14 @@ int main(){
                         break;
                 }
                 game.moveStone(commandString);
+                game.printGame();
                 break;
             case 2: //withdraw a stone
                 if (game.getMoveNum() > 0)
                     game.withdrawStone();
                 else
                     cout << "No stone on the board. No stone to withdraw." << endl;
+                game.printGame();
                 break;
             case 3: //place a try-stone
                 break;

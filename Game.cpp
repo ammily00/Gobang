@@ -1,6 +1,6 @@
 #include "Game.h"
 #include <iostream>
-#include <string>
+#include <string.h>
 #include <time.h>
 using namespace std;
 
@@ -17,8 +17,12 @@ Game::~Game(){
 
 bool Game::validCmdString(char cmdString[4]){
     // P for pass (do not place a stone)
-    if (cmdString[0] == 'P' && cmdString[1] == '\0' && cmdString[2] == '\0' && cmdString[3] == '\0')
+    if ((cmdString[0] == 'B' || cmdString[0] == 'W') &&
+            cmdString[1] == 'P' && cmdString[2] == '\0' && cmdString[3] == '\0'){
+        //cout << "here!" << endl;
         return true;
+    }
+
     //place a stone
     else{
         //extract x coordinate
@@ -36,16 +40,18 @@ bool Game::validCmdString(char cmdString[4]){
          * two-digit number, 1-9 for the tens digit and 0-9 for the units digit
          * also the range should be within the size
          * make sure black stone first and white stone later
+         * As moveNum is increased by one and given to seqNum only if a "moveStone" operation,
+         * so the moveNum used to judge is the seqNum for the most previous stone.
          */
         if ((cmdString[0] == 'B' || cmdString[0] == 'W') &&
-            (cmdString[1] >= 'A' && cmdString[1] <= 'Z') &&
-            (cmdString[2] >= 49 && cmdString[2] <= 57) &&
-            (cmdString[3] == '\0' || (cmdString[3] >= 48 && cmdString[3] <= 57)) &&
-            ((moveNum % 2 == 0 && cmdString[0] == 'B') || (moveNum % 2 == 1 && cmdString[0] == 'W'))){
-                if (size < 10 && cmdString[1] <= 'A' + size - 1 && cmdString[3] == '\0')
-                    return true;
-                else if (size >= 10 && stoi(s) <= size)
-                    return true;
+                (cmdString[1] >= 'A' && cmdString[1] <= 'Z') &&
+                (cmdString[2] >= 49 && cmdString[2] <= 57) &&
+                (cmdString[3] == '\0' || (cmdString[3] >= 48 && cmdString[3] <= 57)) &&
+                ((moveNum % 2 == 0 && cmdString[0] == 'B') || (moveNum % 2 == 1 && cmdString[0] == 'W'))){
+            if (size < 10 && cmdString[1] <= 'A' + size - 1 && cmdString[3] == '\0')
+                return true;
+            else if (size >= 10 && stoi(s) <= size)
+                return true;
         }
     }
     return false;
@@ -53,10 +59,16 @@ bool Game::validCmdString(char cmdString[4]){
 
 Move * Game::splitString(char cmdString[4]){
     Move * splitCmdString = new Move;
+    strcpy(splitCmdString->cmdString, cmdString);
     // P for pass, do not place a stone
     if ((cmdString[0] == 'B' || cmdString[0] == 'W') &&
-         cmdString[1] == 'P' && cmdString[2] == '\0' && cmdString[3] == '\0')
-            splitCmdString = nullptr;
+            cmdString[1] == 'P' && cmdString[2] == '\0' && cmdString[3] == '\0'){
+        if (cmdString[0] == 'B')
+            splitCmdString->color = stoneBlack;
+        else if (cmdString[0] == 'W')
+            splitCmdString->color = stoneWhite;
+    }
+
     // place a stone
     else{
         //color is black or white
@@ -80,117 +92,118 @@ Move * Game::splitString(char cmdString[4]){
     return splitCmdString;
 }
 
-Move * Game::combineString(Move & moves){
-    if ((moves.cmdString[0] == 'B' || moves.cmdString[0] == 'W') &&
-         moves.cmdString[1] == 'P' && moves.cmdString[2] == '\0' && moves.cmdString[3] == '\0'){
-            // sequence number
-            // convert int to char
-            moves.stoneRecord[0] = moves.seqNum + 48;
-            // ":"
-            moves.stoneRecord[1] = ':';
-            //color
-            moves.stoneRecord[2] = moves.cmdString[0];
-            // ":"
-            moves.stoneRecord[3] = ':';
-            // "P"
-            moves.stoneRecord[4] = 'P';
+void Game::combineString(Move & move){
+//    cout << "prrint cmdString" << endl;
+//    for (int i = 0; i < 4; i++){
+//        cout << i << move.cmdString[i];
+//        if (i == 3)
+//            cout << endl;
+//        else
+//            cout << "\t";
+//    }
+
+    if ((move.cmdString[0] == 'B' || move.cmdString[0] == 'W') &&
+        move.cmdString[1] == 'P' && move.cmdString[2] == '\0' && move.cmdString[3] == '\0'){
+        // sequence number
+        // convert int to char
+        move.stoneRecord[0] = move.seqNum + 48;
+        // ":"
+        move.stoneRecord[1] = ':';
+        //color
+        move.stoneRecord[2] = move.cmdString[0];
+        // ":"
+        move.stoneRecord[3] = ':';
+        // "P"
+        move.stoneRecord[4] = 'P';
     }
     else{
-        if (moves.seqNum < 10){
+        if (move.seqNum < 10){
             // sequence number
             // convert int to char
-            moves.stoneRecord[0] = moves.seqNum + 48;
+            move.stoneRecord[0] = move.seqNum + 48;
             // ":"
-            moves.stoneRecord[1] = ':';
+            move.stoneRecord[1] = ':';
             //color
-            moves.stoneRecord[2] = moves.cmdString[0];
+            move.stoneRecord[2] = move.cmdString[0];
             // ":"
-            moves.stoneRecord[3] = ':';
+            move.stoneRecord[3] = ':';
             // y coordinate
-            moves.stoneRecord[4] = moves.cmdString[1];
+            move.stoneRecord[4] = move.cmdString[1];
             // ":"
-            moves.stoneRecord[5] = ':';
+            move.stoneRecord[5] = ':';
             // x coordinate
-            moves.stoneRecord[6] = moves.cmdString[2];
-            moves.stoneRecord[7] = moves.cmdString[3];
+            move.stoneRecord[6] = move.cmdString[2];
+            move.stoneRecord[7] = move.cmdString[3];
         }
-        else if (moves.seqNum >= 10 && moves.seqNum < 100){
+        else if (move.seqNum >= 10 && move.seqNum < 100){
             // sequence number
-            moves.stoneRecord[0] = moves.seqNum / 10 + 48;
-            moves.stoneRecord[1] = moves.seqNum % 10 + 48;
+            move.stoneRecord[0] = move.seqNum / 10 + 48;
+            move.stoneRecord[1] = move.seqNum % 10 + 48;
             // ":"
-            moves.stoneRecord[2] = ':';
+            move.stoneRecord[2] = ':';
             //color
-            moves.stoneRecord[3] = moves.cmdString[0];
+            move.stoneRecord[3] = move.cmdString[0];
             // ":"
-            moves.stoneRecord[4] = ':';
+            move.stoneRecord[4] = ':';
             // y coordinate
-            moves.stoneRecord[5] = moves.cmdString[1];
+            move.stoneRecord[5] = move.cmdString[1];
             // ":"
-            moves.stoneRecord[6] = ':';
+            move.stoneRecord[6] = ':';
             // x coordinate
-            moves.stoneRecord[7] = moves.cmdString[2];
-            moves.stoneRecord[8] = moves.cmdString[3];
+            move.stoneRecord[7] = move.cmdString[2];
+            move.stoneRecord[8] = move.cmdString[3];
         }
-        else if (moves.seqNum >= 100 && moves.seqNum < 1000){
+        else if (move.seqNum >= 100 && move.seqNum < 1000){
             // sequence number
-            moves.stoneRecord[0] = moves.seqNum / 100 + 48;
-            moves.stoneRecord[1] = moves.seqNum % 100 / 10 + 48;
-            moves.stoneRecord[2] = moves.seqNum % 10 + 48;
+            move.stoneRecord[0] = move.seqNum / 100 + 48;
+            move.stoneRecord[1] = move.seqNum % 100 / 10 + 48;
+            move.stoneRecord[2] = move.seqNum % 10 + 48;
             // ":"
-            moves.stoneRecord[3] = ':';
+            move.stoneRecord[3] = ':';
             //color
-            moves.stoneRecord[4] = moves.cmdString[0];
+            move.stoneRecord[4] = move.cmdString[0];
             // ":"
-            moves.stoneRecord[5] = ':';
+            move.stoneRecord[5] = ':';
             // y coordinate
-            moves.stoneRecord[6] = moves.cmdString[1];
+            move.stoneRecord[6] = move.cmdString[1];
             // ":"
-            moves.stoneRecord[7] = ':';
+            move.stoneRecord[7] = ':';
             // x coordinate
-            moves.stoneRecord[8] = moves.cmdString[2];
-            moves.stoneRecord[9] = moves.cmdString[3];
+            move.stoneRecord[8] = move.cmdString[2];
+            move.stoneRecord[9] = move.cmdString[3];
         }
     }
-    return &moves;
 }
 
 void Game::displayRecord(){
     for (vector<Move>::iterator it = moves.begin(); it != moves.end(); it++){
-        cout << combineString(*it)->cmdString << endl;
-        cout << combineString(*it)->stoneRecord << endl;
+//        for (int i = 0; i < 4; i ++)
+//            cout << it->cmdString[i] << endl;
+        combineString(*it);
+        cout << it->stoneRecord << endl;
     }
 }
 
-//bool Game::validMove(Move & moves){
-//    if ((moves.cmdString[0] == 'B' || moves.cmdString[0] == 'W')  &&
-//         moves.cmdString[1] == 'P' && moves.cmdString[2] == '\0' && moves.cmdString[3] == '\0')
-//        return true;
-//    if (moves.seqNum % 2 == 1 && moves.color == stoneBlack)
-//        return true;
-//    else if (moves.seqNum % 2 == 0 && moves.color == stoneWhite)
-//        return true;
-//    return false;
-//}
-
 void Game::moveStone(char cmdString[4]){
     Move * moveAStone = splitString(cmdString);
-    Stone * intersection = board.getStone(moveAStone->x, moveAStone->y);
-    // no stone in this intersection
-    if (intersection == nullptr){
-        // a stone will be placed instead of passing
-        if (moveAStone!= nullptr){
-            board.placeStone(moveAStone->x, moveAStone->y, moveAStone->color);
-            //cout << "!!!" << moveAStone->x << moveAStone->y << moveAStone->color << moveAStone->seqNum << endl;
-        }
+    if (moveAStone->x == -1 && moveAStone->y == -1){ //no stone will be placed (instead, choose to pass)
         moveAStone->seqNum = ++moveNum;
         moves.push_back(*moveAStone);
     }
-    else{
-        if (intersection->color == stoneBlack)
-            cout << "A black stone has been placed at" << cmdString[1] << cmdString[2] << cmdString[3] << endl;
-        else if (intersection->color == stoneWhite)
-            cout << "A white stone has been placed at" << cmdString[1] << cmdString[2] << cmdString[3] << endl;
+    else{ // a stone will be placed instead of passing
+        Stone * intersection = board.getStone(moveAStone->x, moveAStone->y);
+        // no stone in this intersection
+        if (intersection == nullptr) {
+            board.placeStone(moveAStone->x, moveAStone->y, moveAStone->color);
+            moveAStone->seqNum = ++moveNum;
+            moves.push_back(*moveAStone);
+        }
+        else{
+            if (intersection->color == stoneBlack)
+                cout << "A black stone has been placed at" << cmdString[1] << cmdString[2] << cmdString[3] << endl;
+            else if (intersection->color == stoneWhite)
+                cout << "A white stone has been placed at" << cmdString[1] << cmdString[2] << cmdString[3] << endl;
+        }
     }
 }
 
@@ -207,7 +220,8 @@ void Game::replayStone(){
     board.resetBoard();
     board.printBoard();
     for (vector<Move>::iterator it = moves.begin(); it != moves.end(); it++){
-        board.placeStone(it->x, it->y, it->color);
+        if (it->x != -1 && it->y != -1) //make sure it is a real stone instead of passing
+            board.placeStone(it->x, it->y, it->color);
 
         time_t start;
         start = time(0);
@@ -227,7 +241,8 @@ void Game::replayStone(){
 void Game::replayTryStone(){
     refresh();
     for (vector<Move>::iterator it = tryStoneMoves.begin(); it != tryStoneMoves.end(); it++){
-        board.placeStone(it->x, it->y, it->color);
+        if (it->x != -1 && it->y != -1) //make sure it is a real stone instead of passing
+            board.placeStone(it->x, it->y, it->color);
 
         time_t start;
         start = time(0);

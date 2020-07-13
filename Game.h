@@ -140,7 +140,7 @@ private:
      * combine the sequence nnumber and the command string passed in
      * to be saved for the record
      */
-    Move * combineString(Move & moves);
+    void combineString(Move & move);
 
     /*
      * store and display stones in sequence order
