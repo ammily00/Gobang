@@ -50,7 +50,7 @@ bool Game::validCmdString(char cmdString[4]){
                 ((moveNum % 2 == 0 && cmdString[0] == 'B') || (moveNum % 2 == 1 && cmdString[0] == 'W'))){
             if (size < 10 && cmdString[1] <= 'A' + size - 1 && cmdString[3] == '\0')
                 return true;
-            else if (size >= 10 && stoi(s) <= size)
+            else if (size >= 10 && stoi(s) <= size && cmdString[1] <= 'A' + size - 1)
                 return true;
         }
     }
@@ -92,95 +92,16 @@ Move * Game::splitString(char cmdString[4]){
     return splitCmdString;
 }
 
-void Game::combineString(Move & move){
-//    cout << "prrint cmdString" << endl;
-//    for (int i = 0; i < 4; i++){
-//        cout << i << move.cmdString[i];
-//        if (i == 3)
-//            cout << endl;
-//        else
-//            cout << "\t";
-//    }
-
-    if ((move.cmdString[0] == 'B' || move.cmdString[0] == 'W') &&
-        move.cmdString[1] == 'P' && move.cmdString[2] == '\0' && move.cmdString[3] == '\0'){
-        // sequence number
-        // convert int to char
-        move.stoneRecord[0] = move.seqNum + 48;
-        // ":"
-        move.stoneRecord[1] = ':';
-        //color
-        move.stoneRecord[2] = move.cmdString[0];
-        // ":"
-        move.stoneRecord[3] = ':';
-        // "P"
-        move.stoneRecord[4] = 'P';
-    }
-    else{
-        if (move.seqNum < 10){
-            // sequence number
-            // convert int to char
-            move.stoneRecord[0] = move.seqNum + 48;
-            // ":"
-            move.stoneRecord[1] = ':';
-            //color
-            move.stoneRecord[2] = move.cmdString[0];
-            // ":"
-            move.stoneRecord[3] = ':';
-            // y coordinate
-            move.stoneRecord[4] = move.cmdString[1];
-            // ":"
-            move.stoneRecord[5] = ':';
-            // x coordinate
-            move.stoneRecord[6] = move.cmdString[2];
-            move.stoneRecord[7] = move.cmdString[3];
-        }
-        else if (move.seqNum >= 10 && move.seqNum < 100){
-            // sequence number
-            move.stoneRecord[0] = move.seqNum / 10 + 48;
-            move.stoneRecord[1] = move.seqNum % 10 + 48;
-            // ":"
-            move.stoneRecord[2] = ':';
-            //color
-            move.stoneRecord[3] = move.cmdString[0];
-            // ":"
-            move.stoneRecord[4] = ':';
-            // y coordinate
-            move.stoneRecord[5] = move.cmdString[1];
-            // ":"
-            move.stoneRecord[6] = ':';
-            // x coordinate
-            move.stoneRecord[7] = move.cmdString[2];
-            move.stoneRecord[8] = move.cmdString[3];
-        }
-        else if (move.seqNum >= 100 && move.seqNum < 1000){
-            // sequence number
-            move.stoneRecord[0] = move.seqNum / 100 + 48;
-            move.stoneRecord[1] = move.seqNum % 100 / 10 + 48;
-            move.stoneRecord[2] = move.seqNum % 10 + 48;
-            // ":"
-            move.stoneRecord[3] = ':';
-            //color
-            move.stoneRecord[4] = move.cmdString[0];
-            // ":"
-            move.stoneRecord[5] = ':';
-            // y coordinate
-            move.stoneRecord[6] = move.cmdString[1];
-            // ":"
-            move.stoneRecord[7] = ':';
-            // x coordinate
-            move.stoneRecord[8] = move.cmdString[2];
-            move.stoneRecord[9] = move.cmdString[3];
-        }
-    }
-}
-
 void Game::displayRecord(){
     for (vector<Move>::iterator it = moves.begin(); it != moves.end(); it++){
-//        for (int i = 0; i < 4; i ++)
-//            cout << it->cmdString[i] << endl;
-        combineString(*it);
-        cout << it->stoneRecord << endl;
+        if ((it->cmdString[0] == 'B' || it->cmdString[0] == 'W') &&
+                it->cmdString[1] == 'P' && it->cmdString[2] == '\0' && it->cmdString[3] == '\0'){
+            cout << it->seqNum << ":" << it->cmdString[0] << ":" << it->cmdString[1] << endl;
+        }
+        else{
+            cout << it->seqNum << ":" << it->cmdString[0] << ":" << it->cmdString[1] << ":"
+                 << it->cmdString[2] << it->cmdString[3] << endl;
+        }
     }
 }
 
@@ -197,6 +118,12 @@ void Game::moveStone(char cmdString[4]){
             board.placeStone(moveAStone->x, moveAStone->y, moveAStone->color);
             moveAStone->seqNum = ++moveNum;
             moves.push_back(*moveAStone);
+
+            // check victory
+            if (checkVictory(moveAStone->x, moveAStone->y, moveAStone->color) == moveAStone->color){
+                cout << moveAStone->color << "wins." << endl;
+                status = GameEnd;
+            }
         }
         else{
             if (intersection->color == stoneBlack)
@@ -205,6 +132,10 @@ void Game::moveStone(char cmdString[4]){
                 cout << "A white stone has been placed at" << cmdString[1] << cmdString[2] << cmdString[3] << endl;
         }
     }
+}
+
+int Game::getGameStatus(){
+    return status;
 }
 
 void Game::tryStone(char cmdString[4]){
@@ -261,9 +192,8 @@ void Game::replayTryStone(){
 
 void Game::withdrawStone(){
     Move * recentStone = &(moves.back());
-    //cout << "~~~" << recentStone->x << recentStone->y << recentStone->color << endl;
-    board.removeStone(recentStone->x, recentStone->y);
-    //cout << "..." << recentStone->x << recentStone->y << recentStone->color << endl;
+    if (recentStone->x != -1 && recentStone->y != -1)
+        board.removeStone(recentStone->x, recentStone->y);
     moves.pop_back();
     moveNum--;
 }
@@ -283,8 +213,58 @@ void Game::refresh(){
     board.printBoard();
 }
 
-int Game::checkVictory(){
-    return 0;
+int Game::checkVictory(int x, int y, stoneColor color){
+    // check whether there are five sequential stones in the same color as the stone passed in
+    bool win = false;
+    // true means that the stone passed in is in the five sequential stones in this row/column/diagonal
+    bool found = false;
+
+    // row
+    for (int j = 0; j < size; j++){
+        if (j < size - 4) {
+            if (board.grid[x][j].color == color && board.grid[x][j+1].color == color &&
+                board.grid[x][j+2].color == color && board.grid[x][j+3].color == color &&
+                board.grid[x][j+4].color == color)
+                win = true;
+            if (y == j || y == j+1 || y == j+2 || y == j+3 || y == j+4)
+                found = true;
+            if (win == true && found == true){
+                win = false;
+                found = false;
+                return color;
+            }
+            else{
+                win = false;
+                found = false;
+            }
+        }
+    }
+
+    // column
+    for (int i = 0; i < size; i++){
+        if (i < size - 4) {
+            if (board.grid[x][i].color == color && board.grid[x][i+1].color == color &&
+                board.grid[x][i+2].color == color && board.grid[x][i+3].color == color &&
+                board.grid[x][i+4].color == color)
+                win = true;
+            if (y == i || y == i+1 || y == i+2 || y == i+3 || y == i+4)
+                found = true;
+            if (win == true && found == true){
+                win = false;
+                found = false;
+                return color;
+            }
+            else{
+                win = false;
+                found = false;
+            }
+        }
+    }
+
+    // diagonal (left top to right bottom)
+
+
+    return -1;
 //    return blackWin;
 //    return whiteWin;
 //

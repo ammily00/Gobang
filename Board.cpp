@@ -24,7 +24,7 @@ void Board::printBoard(){
     cout << "Stones must be in this format: "
             "color(B for black, W for white)y coordinate(starting from A to A + size - 1)x coordinate(size~1)" << endl;
     cout << "Or you can choose to skip by pressing P for pass" << endl;
-    cout << "For example:  BA1   WB10   P   P" << endl;
+    cout << "For example:  BA1   WB10   BP   WP" << endl;
 
     for (int i = 0; i < size; i++){
         for (int j = 0; j < size; j++){

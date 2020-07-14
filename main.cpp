@@ -45,6 +45,11 @@ int main(){
     game.printGame();
 
     while(1){
+        if (game.getGameStatus() == GameEnd){
+            cout << "Game ends!" << endl;
+            exit(1);
+        }
+
         cout << "Please select the number: (Type number directly like 1, 2, or 3)" << endl;
         cout << "1. place a stone" << endl;
         cout << "2. withdraw a stone" << endl;
@@ -73,6 +78,7 @@ int main(){
                 cout << "All the letters must be capital" << endl;
                 cout << "Or you can choose to skip by pressing P for pass" << endl;
                 cout << "For example:  BA1   WB10   BP   WP" << endl;
+
                 char commandString[4];
                 cin >> commandString;
                 cout << endl;
@@ -87,11 +93,14 @@ int main(){
                 game.printGame();
                 break;
             case 2: //withdraw a stone
-                if (game.getMoveNum() > 0)
+                if (game.getMoveNum() > 0){
                     game.withdrawStone();
-                else
-                    cout << "No stone on the board. No stone to withdraw." << endl;
-                game.printGame();
+                    game.printGame();
+                }
+                else{
+                    game.printGame();
+                    cout << "\nNo stone on the board. No stone to withdraw.\n" << endl;
+                }
                 break;
             case 3: //place a try-stone
                 break;
@@ -109,6 +118,7 @@ int main(){
                 break;
             case 9:
                 game.displayRecord();
+                cout << endl;
                 break;
             case 10:
                 exit(0);

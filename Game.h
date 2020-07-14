@@ -8,8 +8,7 @@
 #include "Move.h"
 
 typedef enum {
-    gameStart,
-    gameProcess,
+    GameStart,
     GameEnd
 } gameStatus;
 
@@ -103,6 +102,8 @@ public:
 
     void displayRecord();
 
+    int getGameStatus();
+
 private:
     /*
      * use Board object
@@ -127,7 +128,7 @@ private:
      * gameProcess: game processes (from the first stone to the result of the game)
      * gameEnd: game ends, no more operations
      */
-    gameStatus status;
+    gameStatus status = GameStart;
 
     /*
      * split the cmdString
@@ -136,11 +137,7 @@ private:
      */
     Move * splitString(char cmdString[4]);
 
-    /*
-     * combine the sequence nnumber and the command string passed in
-     * to be saved for the record
-     */
-    void combineString(Move & move);
+    int checkVictory(int x, int y, stoneColor color);
 
     /*
      * store and display stones in sequence order
