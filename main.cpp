@@ -27,16 +27,16 @@ int main(){
 
 
     cout << "Welcome to the Gobang Game!" << endl << endl;
-    cout << "Please choose the size of the board, size must be in the range [6, 31] (usually an odd number)" << endl;
-    //make sure boardSize is an interger in range [6, 31].
+    cout << "Please choose the size of the board, size must be in the range [6, 26] (usually an odd number)" << endl;
+    //make sure boardSize is an interger in range [6, 26].
     string boardSize;
     cin >> boardSize;
     cout << endl;
-    while (!check_number(boardSize) || stoi(boardSize) < 6 || stoi(boardSize) > 31){
+    while (!check_number(boardSize) || stoi(boardSize) < 6 || stoi(boardSize) > 26){
         cout << "\nwrong number, please input again" << endl;
         cin >> boardSize;
         cout << endl;
-        if (check_number(boardSize) && stoi(boardSize) >= 6 && stoi(boardSize) <= 31)
+        if (check_number(boardSize) && stoi(boardSize) >= 6 && stoi(boardSize) <= 26)
             break;
     }
 
@@ -46,8 +46,39 @@ int main(){
 
     while(1){
         if (game.getGameStatus() == GameEnd){
-            cout << "Game ends!" << endl;
-            exit(1);
+            cout << "Game ends!" << endl << endl;
+            while(1){
+                cout << "Please select the number: (Type number directly like 1, 2, or 3)" << endl;
+                cout << "1. print the board" << endl;
+                cout << "2. replay the game" << endl;
+                cout << "3. display stone record" << endl;
+                cout << "4. exit" << endl;
+
+                // make sure modeNum is an integer in range [1, 4]
+                string modeNum;
+                cin >> modeNum;
+                if(!check_number(modeNum) || stoi(modeNum) < 1 || stoi(modeNum) > 4) {
+                    cout << "\nwrong number, please select again." << endl;
+                    continue;
+                }
+
+                switch (stoi(modeNum)){
+                    case 1:  //print the board
+                        game.printGame();
+                        break;
+                    case 2:  //replay the game
+                        game.replayStone();
+                        break;
+                    case 3: //display stone record
+                        game.displayRecord();
+                        cout << endl;
+                        break;
+                    case 4:
+                        exit(0);
+                    default:
+                        break;
+                }
+            }
         }
 
         cout << "Please select the number: (Type number directly like 1, 2, or 3)" << endl;
@@ -89,8 +120,8 @@ int main(){
                     if (game.validCmdString(commandString))
                         break;
                 }
-                game.moveStone(commandString);
-                game.printGame();
+                if (game.moveStone(commandString))
+                    game.printGame();
                 break;
             case 2: //withdraw a stone
                 if (game.getMoveNum() > 0){

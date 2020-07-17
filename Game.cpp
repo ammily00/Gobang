@@ -48,7 +48,8 @@ bool Game::validCmdString(char cmdString[4]){
                 (cmdString[2] >= 49 && cmdString[2] <= 57) &&
                 (cmdString[3] == '\0' || (cmdString[3] >= 48 && cmdString[3] <= 57)) &&
                 ((moveNum % 2 == 0 && cmdString[0] == 'B') || (moveNum % 2 == 1 && cmdString[0] == 'W'))){
-            if (size < 10 && cmdString[1] <= 'A' + size - 1 && cmdString[3] == '\0')
+            if (size < 10 && cmdString[1] <= 'A' + size - 1 &&
+                    cmdString[2] <= '1' + size - 1 && cmdString[3] == '\0')
                 return true;
             else if (size >= 10 && stoi(s) <= size && cmdString[1] <= 'A' + size - 1)
                 return true;
@@ -82,8 +83,8 @@ Move * Game::splitString(char cmdString[4]){
             splitCmdString->y = cmdString[1] - 65;
 
         // convert x coordinate from size~1 to 0~size-1
-        // one-digit number, 0-9 for the units digit (0-9 for cmdString[2] and '\0' for cmdString[3])
-        if (cmdString[2] >= 48 && cmdString[2] <= 57 && cmdString[3] == '\0')
+        // one-digit number, 1-9 for the units digit (1-9 for cmdString[2] and '\0' for cmdString[3])
+        if (cmdString[2] >= 49 && cmdString[2] <= 57 && cmdString[3] == '\0')
             splitCmdString->x = size - cmdString[2] + 48;
         // two-digit number, 1-9 for the tens digit (cmdString[2]) and 0-9 for the units digit (cmdString[3])
         else if (cmdString[2] >= 49 && cmdString[2] <= 57 && cmdString[3] >= 48 && cmdString[3] <= 57)
@@ -105,7 +106,7 @@ void Game::displayRecord(){
     }
 }
 
-void Game::moveStone(char cmdString[4]){
+bool Game::moveStone(char cmdString[4]){
     Move * moveAStone = splitString(cmdString);
     if (moveAStone->x == -1 && moveAStone->y == -1){ //no stone will be placed (instead, choose to pass)
         moveAStone->seqNum = ++moveNum;
@@ -119,19 +120,35 @@ void Game::moveStone(char cmdString[4]){
             moveAStone->seqNum = ++moveNum;
             moves.push_back(*moveAStone);
 
+//            cout << "Here to check victory!\t"
+//                 << checkVictory(moveAStone->x, moveAStone->y, moveAStone->color) << endl;
+
             // check victory
-            if (checkVictory(moveAStone->x, moveAStone->y, moveAStone->color) == moveAStone->color){
-                cout << moveAStone->color << "wins." << endl;
+            int result = checkVictory(moveAStone->x, moveAStone->y, moveAStone->color);
+            if (result == moveAStone->color){
+                if (moveAStone->color == stoneBlack)
+                    cout << "Black wins!" << endl;
+                else if (moveAStone->color == stoneWhite)
+                    cout << "White wins!" << endl;
                 status = GameEnd;
+                return false;
+            }
+            if (board.fullBoard() == true && result == -1){
+                cout << "standoff" << endl;
+                status = GameEnd;
+                return false;
             }
         }
         else{
             if (intersection->color == stoneBlack)
-                cout << "A black stone has been placed at" << cmdString[1] << cmdString[2] << cmdString[3] << endl;
+                cout << "A black stone has been placed at "
+                     << cmdString[1] << cmdString[2] << cmdString[3] << endl << endl;
             else if (intersection->color == stoneWhite)
-                cout << "A white stone has been placed at" << cmdString[1] << cmdString[2] << cmdString[3] << endl;
+                cout << "A white stone has been placed at "
+                     << cmdString[1] << cmdString[2] << cmdString[3] << endl<< endl;
         }
     }
+    return true;
 }
 
 int Game::getGameStatus(){
@@ -238,16 +255,17 @@ int Game::checkVictory(int x, int y, stoneColor color){
                 found = false;
             }
         }
+
     }
 
     // column
     for (int i = 0; i < size; i++){
-        if (i < size - 4) {
-            if (board.grid[x][i].color == color && board.grid[x][i+1].color == color &&
-                board.grid[x][i+2].color == color && board.grid[x][i+3].color == color &&
-                board.grid[x][i+4].color == color)
+        if (i < size-4) {
+            if (board.grid[i][y].color == color && board.grid[i+1][y].color == color &&
+                board.grid[i+2][y].color == color && board.grid[i+3][y].color == color &&
+                board.grid[i+4][y].color == color)
                 win = true;
-            if (y == i || y == i+1 || y == i+2 || y == i+3 || y == i+4)
+            if (x == i || x == i+1 || x == i+2 || x == i+3 || x == i+4)
                 found = true;
             if (win == true && found == true){
                 win = false;
@@ -262,13 +280,106 @@ int Game::checkVictory(int x, int y, stoneColor color){
     }
 
     // diagonal (left top to right bottom)
+    if (x <= y){
+        for (int i = 0, j = y-x; i < size-y+x && j < size; i++, j++){
+            if (y-x < size-4){ // the diagonal has at least 5 intersections
+                if (j < size-4){
+                    if (board.grid[i][j].color == color && board.grid[i+1][j+1].color == color &&
+                        board.grid[i+2][j+2].color == color && board.grid[i+3][j+3].color == color &&
+                        board.grid[i+4][j+4].color == color)
+                        win = true;
+                    if ((x == i && y == j) || (x == i+1 && y == j+1) || (x == i+2 && j == i+2) ||
+                        (x == i+3 && y == j+3) || (x == i+4 && y == j+4))
+                        found = true;
+                    if (win == true && found == true){
+                        win = false;
+                        found = false;
+                        return color;
+                    }
+                    else{
+                        win = false;
+                        found = false;
+                    }
+                }
+            }
+        }
+    }
+    else{ // x > y
+        for (int i = x-y, j = 0; i < size && j < size-x+y; i++, j++){
+            if (x-y < size-4){ // the diagonal has at least 5 intersections
+                if (i < size-4){
+                    if (board.grid[i][j].color == color && board.grid[i+1][j+1].color == color &&
+                        board.grid[i+2][j+2].color == color && board.grid[i+3][j+3].color == color &&
+                        board.grid[i+4][j+4].color == color)
+                        win = true;
+                    if ((x == i && y == j) || (x == i+1 && y == j+1) || (x == i+2 && j == i+2) ||
+                        (x == i+3 && y == j+3) || (x == i+4 && y == j+4))
+                        found = true;
+                    if (win == true && found == true){
+                        win = false;
+                        found = false;
+                        return color;
+                    }
+                    else{
+                        win = false;
+                        found = false;
+                    }
+                }
+            }
+        }
+    }
 
-
+    // diagonal (right top to left bottom)
+    if (x+y < size){
+        for (int i = 0, j = x+y; i <= x+y && j >= 0; i++, j--){
+            if (x+y >= 4){ // the diagonal has at least 5 intersections
+                if (i <= x+y-4){
+                    if (board.grid[i][j].color == color && board.grid[i+1][j-1].color == color &&
+                        board.grid[i+2][j-2].color == color && board.grid[i+3][j-3].color == color &&
+                        board.grid[i+4][j-4].color == color)
+                        win = true;
+                    if ((x == i && y == j) || (x == i+1 && y == j-1) || (x == i+2 && j == i-2) ||
+                        (x == i+3 && y == j-3) || (x == i+4 && y == j-4))
+                        found = true;
+                    if (win == true && found == true){
+                        win = false;
+                        found = false;
+                        return color;
+                    }
+                    else{
+                        win = false;
+                        found = false;
+                    }
+                }
+            }
+        }
+    }
+    else{ // x+y >= size
+        for (int i = x+y-size+1, j = size-1; i < size && j > x+y-size; i++, j--){
+            // the last one: starting from (size-5, size-1) to (size-1, size-5), sum is 2*size-6
+            if (x+y <= 2*size-6){ // the diagonal has at least 5 intersections
+                if (i < size-4){
+                    if (board.grid[i][j].color == color && board.grid[i+1][j-1].color == color &&
+                        board.grid[i+2][j-2].color == color && board.grid[i+3][j-3].color == color &&
+                        board.grid[i+4][j-4].color == color)
+                        win = true;
+                    if ((x == i && y == j) || (x == i+1 && y == j-1) || (x == i+2 && j == i-2) ||
+                        (x == i+3 && y == j-3) || (x == i+4 && y == j-4))
+                        found = true;
+                    if (win == true && found == true){
+                        win = false;
+                        found = false;
+                        return color;
+                    }
+                    else{
+                        win = false;
+                        found = false;
+                    }
+                }
+            }
+        }
+    }
     return -1;
-//    return blackWin;
-//    return whiteWin;
-//
-//    return equalWin;
 }
 
 void Game::printGame(){

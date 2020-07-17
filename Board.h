@@ -40,6 +40,9 @@ public:
      */
     void resetBoard();
 
+    bool fullBoard();
+
+    friend class Game;
 
 private:
 

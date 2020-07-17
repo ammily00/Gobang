@@ -101,3 +101,16 @@ void Board::resetBoard(){
         }
     }
 }
+
+bool Board::fullBoard(){
+    int cnt = 0;
+    for (int i = 0; i < size; i++){
+        for (int j = 0; j < size; j++){
+            if (grid[i][j].color == stoneBlack || grid[i][j].color == stoneWhite)
+                cnt++;
+        }
+    }
+    if (cnt == size*size)
+        return true;
+    return false;
+}

@@ -53,7 +53,7 @@ public:
      * Push this coordinate & stone color into the vector (for replay)
      * also store the stones in the array (for printBoard)
      */
-    void moveStone(char cmdString[4]);
+    bool moveStone(char cmdString[4]);
 
     /*
      * beyond the real game, guess where the players will place stones
