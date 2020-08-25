@@ -124,7 +124,8 @@ bool Game::moveStone(char cmdString[4]){
 //                 << checkVictory(moveAStone->x, moveAStone->y, moveAStone->color) << endl;
 
             // check victory
-            int result = checkVictory(moveAStone->x, moveAStone->y, moveAStone->color);
+            int result = checkVictory(board.grid, moveAStone->x, 
+                                      moveAStone->y, moveAStone->color);
             if (result == moveAStone->color){
                 if (moveAStone->color == stoneBlack)
                     cout << "Black wins!" << endl;
@@ -230,157 +231,158 @@ void Game::refresh(){
     board.printBoard();
 }
 
-int Game::checkVictory(int x, int y, stoneColor color){
-    // check whether there are five sequential stones in the same color as the stone passed in
-    bool win = false;
-    // true means that the stone passed in is in the five sequential stones in this row/column/diagonal
-    bool found = false;
-
-    // row
-    for (int j = 0; j < size; j++){
-        if (j < size - 4) {
-            if (board.grid[x][j].color == color && board.grid[x][j+1].color == color &&
-                board.grid[x][j+2].color == color && board.grid[x][j+3].color == color &&
-                board.grid[x][j+4].color == color)
-                win = true;
-            if (y == j || y == j+1 || y == j+2 || y == j+3 || y == j+4)
-                found = true;
-            if (win == true && found == true){
-                win = false;
-                found = false;
-                return color;
-            }
-            else{
-                win = false;
-                found = false;
-            }
-        }
-
-    }
-
-    // column
-    for (int i = 0; i < size; i++){
-        if (i < size-4) {
-            if (board.grid[i][y].color == color && board.grid[i+1][y].color == color &&
-                board.grid[i+2][y].color == color && board.grid[i+3][y].color == color &&
-                board.grid[i+4][y].color == color)
-                win = true;
-            if (x == i || x == i+1 || x == i+2 || x == i+3 || x == i+4)
-                found = true;
-            if (win == true && found == true){
-                win = false;
-                found = false;
-                return color;
-            }
-            else{
-                win = false;
-                found = false;
-            }
-        }
-    }
-
-    // diagonal (left top to right bottom)
-    if (x <= y){
-        for (int i = 0, j = y-x; i < size-y+x && j < size; i++, j++){
-            if (y-x < size-4){ // the diagonal has at least 5 intersections
-                if (j < size-4){
-                    if (board.grid[i][j].color == color && board.grid[i+1][j+1].color == color &&
-                        board.grid[i+2][j+2].color == color && board.grid[i+3][j+3].color == color &&
-                        board.grid[i+4][j+4].color == color)
-                        win = true;
-                    if ((x == i && y == j) || (x == i+1 && y == j+1) || (x == i+2 && j == i+2) ||
-                        (x == i+3 && y == j+3) || (x == i+4 && y == j+4))
-                        found = true;
-                    if (win == true && found == true){
-                        win = false;
-                        found = false;
-                        return color;
-                    }
-                    else{
-                        win = false;
-                        found = false;
-                    }
-                }
-            }
-        }
-    }
-    else{ // x > y
-        for (int i = x-y, j = 0; i < size && j < size-x+y; i++, j++){
-            if (x-y < size-4){ // the diagonal has at least 5 intersections
-                if (i < size-4){
-                    if (board.grid[i][j].color == color && board.grid[i+1][j+1].color == color &&
-                        board.grid[i+2][j+2].color == color && board.grid[i+3][j+3].color == color &&
-                        board.grid[i+4][j+4].color == color)
-                        win = true;
-                    if ((x == i && y == j) || (x == i+1 && y == j+1) || (x == i+2 && j == i+2) ||
-                        (x == i+3 && y == j+3) || (x == i+4 && y == j+4))
-                        found = true;
-                    if (win == true && found == true){
-                        win = false;
-                        found = false;
-                        return color;
-                    }
-                    else{
-                        win = false;
-                        found = false;
-                    }
-                }
-            }
-        }
-    }
-
-    // diagonal (right top to left bottom)
-    if (x+y < size){
-        for (int i = 0, j = x+y; i <= x+y && j >= 0; i++, j--){
-            if (x+y >= 4){ // the diagonal has at least 5 intersections
-                if (i <= x+y-4){
-                    if (board.grid[i][j].color == color && board.grid[i+1][j-1].color == color &&
-                        board.grid[i+2][j-2].color == color && board.grid[i+3][j-3].color == color &&
-                        board.grid[i+4][j-4].color == color)
-                        win = true;
-                    if ((x == i && y == j) || (x == i+1 && y == j-1) || (x == i+2 && j == i-2) ||
-                        (x == i+3 && y == j-3) || (x == i+4 && y == j-4))
-                        found = true;
-                    if (win == true && found == true){
-                        win = false;
-                        found = false;
-                        return color;
-                    }
-                    else{
-                        win = false;
-                        found = false;
-                    }
-                }
-            }
-        }
-    }
-    else{ // x+y >= size
-        for (int i = x+y-size+1, j = size-1; i < size && j > x+y-size; i++, j--){
-            // the last one: starting from (size-5, size-1) to (size-1, size-5), sum is 2*size-6
-            if (x+y <= 2*size-6){ // the diagonal has at least 5 intersections
-                if (i < size-4){
-                    if (board.grid[i][j].color == color && board.grid[i+1][j-1].color == color &&
-                        board.grid[i+2][j-2].color == color && board.grid[i+3][j-3].color == color &&
-                        board.grid[i+4][j-4].color == color)
-                        win = true;
-                    if ((x == i && y == j) || (x == i+1 && y == j-1) || (x == i+2 && j == i-2) ||
-                        (x == i+3 && y == j-3) || (x == i+4 && y == j-4))
-                        found = true;
-                    if (win == true && found == true){
-                        win = false;
-                        found = false;
-                        return color;
-                    }
-                    else{
-                        win = false;
-                        found = false;
-                    }
-                }
-            }
-        }
-    }
-    return -1;
+int Game::checkVictory(Stone ** grid, int x, int y, stoneColor color){ 
+    // check whether there are five sequential stones in the same color as the stone passed in 
+    bool win = false; 
+    // true means that the stone passed in is in the five sequential stones in this row/column/diagonal 
+    bool found = false; 
+ 
+    // row 
+    for (int j = 0; j < size; j++){ 
+        if (j < size - 4) { 
+            if (grid[x][j].color == color && grid[x][j+1].color == color && 
+                grid[x][j+2].color == color && grid[x][j+3].color == color && 
+                grid[x][j+4].color == color) 
+                win = true; 
+            if (y == j || y == j+1 || y == j+2 || y == j+3 || y == j+4) 
+                found = true; 
+            if (win == true && found == true){ 
+                win = false; 
+                found = false; 
+                return color; 
+            } 
+            else{ 
+                win = false; 
+                found = false; 
+            } 
+        } 
+ 
+    } 
+ 
+    // column 
+    for (int i = 0; i < size; i++){ 
+        if (i < size-4) { 
+            if (grid[i][y].color == color && grid[i+1][y].color == color && 
+                grid[i+2][y].color == color && grid[i+3][y].color == color && 
+                grid[i+4][y].color == color) 
+                win = true; 
+            if (x == i || x == i+1 || x == i+2 || x == i+3 || x == i+4) 
+                found = true; 
+            if (win == true && found == true){ 
+                win = false; 
+                found = false; 
+                return color; 
+            } 
+            else{ 
+                win = false; 
+                found = false; 
+            } 
+        } 
+    } 
+ 
+    // diagonal (left top to right bottom) 
+    if (x <= y){ 
+        for (int i = 0, j = y-x; i < size-y+x && j < size; i++, j++){ 
+            if (y-x < size-4){ // the diagonal has at least 5 intersections 
+                if (j < size-4){ 
+                    if (grid[i][j].color == color && grid[i+1][j+1].color == color && 
+                        grid[i+2][j+2].color == color && grid[i+3][j+3].color == color && 
+                        grid[i+4][j+4].color == color) 
+                        win = true; 
+                    if ((x == i && y == j) || (x == i+1 && y == j+1) || (x == i+2 && j == i+2) || 
+                        (x == i+3 && y == j+3) || (x == i+4 && y == j+4)) 
+                        found = true; 
+                    if (win == true && found == true){ 
+                        win = false; 
+                        found = false; 
+                        return color; 
+                    } 
+                    else{ 
+                        win = false; 
+                        found = false; 
+                    } 
+                } 
+            } 
+        } 
+    } 
+    else{ // x > y 
+        for (int i = x-y, j = 0; i < size && j < size-x+y; i++, j++){ 
+            if (x-y < size-4){ // the diagonal has at least 5 intersections 
+                if (i < size-4){ 
+                    if (grid[i][j].color == color && grid[i+1][j+1].color == color && 
+                        grid[i+2][j+2].color == color && grid[i+3][j+3].color == color && 
+                        grid[i+4][j+4].color == color) 
+                        win = true; 
+                    if ((x == i && y == j) || (x == i+1 && y == j+1) || (x == i+2 && j == i+2) || 
+                        (x == i+3 && y == j+3) || (x == i+4 && y == j+4)) 
+                        found = true; 
+                    if (win == true && found == true){ 
+                        win = false; 
+                        found = false; 
+                        return color; 
+                    } 
+                    else{ 
+                        win = false; 
+                        found = false; 
+                    } 
+                } 
+            } 
+        } 
+    } 
+ 
+    // diagonal (right top to left bottom) 
+    if (x+y < size){ 
+        for (int i = 0, j = x+y; i <= x+y && j >= 0; i++, j--){ 
+            if (x+y >= 4){ // the diagonal has at least 5 intersections 
+                if (i <= x+y-4){ 
+                    if (grid[i][j].color == color && grid[i+1][j-1].color == color && 
+                        grid[i+2][j-2].color == color && grid[i+3][j-3].color == color && 
+                        grid[i+4][j-4].color == color) 
+                        win = true; 
+                    if ((x == i && y == j) || (x == i+1 && y == j-1) || (x == i+2 && j == i-2) || 
+                        (x == i+3 && y == j-3) || (x == i+4 && y == j-4)) 
+                        found = true; 
+                    if (win == true && found == true){ 
+                        win = false; 
+                        found = false; 
+                        return color; 
+                    } 
+                    else{ 
+                        win = false; 
+                        found = false; 
+                    } 
+                } 
+            } 
+        } 
+    } 
+    else{ // x+y >= size 
+        for (int i = x+y-size+1, j = size-1; i < size && j > x+y-size; i++, j--){ 
+            // the last one: starting from (size-5, size-1) to (size-1, size-5), sum is 2*size-6 
+            if (x+y <= 2*size-6){ // the diagonal has at least 5 intersections 
+                if (i < size-4){ 
+                    if (grid[i][j].color == color && grid[i+1][j-1].color == color && 
+                        grid[i+2][j-2].color == color && grid[i+3][j-3].color == color && 
+                        grid[i+4][j-4].color == color) 
+                        win = true; 
+                    if ((x == i && y == j) || (x == i+1 && y == j-1) || (x == i+2 && j == i-2) || 
+                        (x == i+3 && y == j-3) || (x == i+4 && y == j-4)) 
+                        found = true; 
+                    if (win == true && found == true){ 
+                        win = false; 
+                        found = false; 
+                        return color; 
+                    } 
+                    else{ 
+                        win = false; 
+                        found = false; 
+                    } 
+                } 
+            } 
+        } 
+    } 
+    return -1; 
 }
+
 
 void Game::printGame(){
     board.printBoard();

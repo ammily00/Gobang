@@ -1,8 +1,19 @@
+// g++ Board.cpp Guiboard.cpp main.cpp -o test `pkg-config --cflags --libs opencv`
+// g++ Board.cpp Guiboard.cpp Game.cpp Guigame.cpp main.cpp -o test `pkg-config --cflags --libs opencv` 
+//g++ -g Board.cpp Guiboard.cpp Game.cpp Guigame.cpp main.cpp -o gdbtest `pkg-config --cflags --libs opencv`
+
+
 #include <iostream>
+#include <unistd.h>
 #include "Board.h"
+#include "Guiboard.h"
 #include "Game.h"
+#include "Guigame.h"
 
 using namespace std;
+using namespace cv;
+
+Guigame guigame(19);
 
 bool check_number(string str) {
     for (unsigned int i = 0; i < str.length(); i++){
@@ -10,6 +21,18 @@ bool check_number(string str) {
             return false;
     }
     return true;
+}
+
+void onMouse(int event, int x, int y, int flag, void *param) {
+    //cout << "in onmouse" << param << endl;
+    if (event == EVENT_LBUTTONDOWN) {
+        // Store point coordinates
+        Point pt;
+        pt.x = x,
+        pt.y = y;
+        guigame.moveStone(pt);
+        guigame.printGame();
+    }
 }
 
 int main(){
@@ -24,6 +47,27 @@ int main(){
 //    cout << board.getStone(2, 3)->x << board.getStone(2, 3)->y << board.getStone(2, 3)->color << endl;
 //    //cout << board.getStone(3, 3) << endl;
 //    return 0;
+
+
+    namedWindow("gobang board", 1);   
+    setMouseCallback("gobang board", onMouse, &guigame);
+    //cout << "setmousecallback" << &guigame << endl;
+    guigame.printGame();
+
+
+    // Guiboard board;
+    // board.placeStone(2, 3, stoneBlack);
+    // board.placeStone(1, 1, stoneWhite);
+    // board.placeStone(4, 2, stoneBlack);
+    // board.placeStone(3, 4, stoneWhite);
+    // board.printBoard();
+    // return 0;
+
+    //sleep(10);
+    
+
+    return 0;
+
 
 
     cout << "Welcome to the Gobang Game!" << endl << endl;

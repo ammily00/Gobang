@@ -89,11 +89,6 @@ public:
     void refresh();
 
     /*
-     * rules to judge the winner
-     */
-    int checkVictory();
-
-    /*
      * print the board and the stones
      */
     void printGame();
@@ -104,14 +99,7 @@ public:
 
     int getGameStatus();
 
-private:
-    /*
-     * use Board object
-     */
-    Board board;
-
-    int size;
-
+protected:
     /*
      * move number default to be 0
      */
@@ -123,23 +111,6 @@ private:
     int tryStoneMoveNum;
 
     /*
-     * status of the game
-     * gameStart: game starts (the initial status, before the first stone is placed on the board)
-     * gameProcess: game processes (from the first stone to the result of the game)
-     * gameEnd: game ends, no more operations
-     */
-    gameStatus status = GameStart;
-
-    /*
-     * split the cmdString
-     * return a nullptr if no stone is placed (P for pass)
-     * return a Move object pointer if a stone is placed
-     */
-    Move * splitString(char cmdString[4]);
-
-    int checkVictory(int x, int y, stoneColor color);
-
-    /*
      * store and display stones in sequence order
      */
     std::vector <Move> moves;
@@ -148,6 +119,35 @@ private:
      * store and display tryStones in sequence order
      */
     std::vector <Move> tryStoneMoves;
+        
+    /*
+     * status of the game
+     * gameStart: game starts (the initial status, before the first stone is placed on the board)
+     * gameProcess: game processes (from the first stone to the result of the game)
+     * gameEnd: game ends, no more operations
+     */
+    gameStatus status = GameStart;
+
+    int checkVictory(Stone ** grid, int x, int y, stoneColor color);
+
+    
+
+private:
+    /*
+     * use Board object
+     */
+    Board board;
+
+    int size;
+
+    /*
+     * split the cmdString
+     * return a nullptr if no stone is placed (P for pass)
+     * return a Move object pointer if a stone is placed
+     */
+    Move * splitString(char cmdString[4]);
+    
+    
 
     /*
      * store stones in sequence order

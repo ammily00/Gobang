@@ -13,9 +13,11 @@ Board::Board(int size){
 }
 
 Board::~Board(){
+    // cout << "~~~~~~~~~~~~~~~~~~~~~~~ board destructor begins" << endl; 
     for(int i = 0; i < size; i++)
         delete[] grid[i];
     delete[] grid;
+    // cout << "~~~~~~~~~~~~~~~~~~~~~~~ board destructor ends" << endl; 
 }
 
 void Board::printBoard(){
@@ -89,7 +91,6 @@ void Board::placeStone(int x, int y, stoneColor color){
 
 void Board::removeStone(int x, int y){
     grid[x][y].color = NOSTONE;
-    cout << grid[x][y].color << endl;
 }
 
 void Board::resetBoard(){

@@ -44,12 +44,16 @@ public:
 
     friend class Game;
 
+    friend class Guigame;
+
 private:
 
     /*
      * the size (size*size) of the board
      */
     int size;
+
+protected:    
 
     /*
      * store stones in a two dimensional array
